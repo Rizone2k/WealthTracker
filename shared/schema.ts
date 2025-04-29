@@ -30,6 +30,12 @@ export const assetSourceSchema = z.enum([
   "Investment Fund",
   "Digital Wallet",
   "Stock Portfolio",
+  "Real Estate",
+  "Gold & Jewelry",
+  "Cryptocurrency",
+  "Bonds",
+  "Foreign Currency",
+  "Vehicle",
   "Other"
 ]);
 
@@ -42,5 +48,11 @@ export const ASSET_SOURCE_COLORS: Record<string, string> = {
   "Investment Fund": "#6366F1", // indigo
   "Digital Wallet": "#F59E0B", // amber
   "Stock Portfolio": "#8B5CF6", // purple
+  "Real Estate": "#EF4444", // red
+  "Gold & Jewelry": "#F59E0B", // amber/gold
+  "Cryptocurrency": "#2563EB", // blue
+  "Bonds": "#059669", // emerald
+  "Foreign Currency": "#0EA5E9", // sky blue
+  "Vehicle": "#7C3AED", // violet
   "Other": "#EC4899", // pink
 };

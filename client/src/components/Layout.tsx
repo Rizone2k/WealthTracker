@@ -62,16 +62,17 @@ export default function Layout({ children, onAddAsset }: LayoutProps) {
           <ul>
             {navigationItems.map((item) => (
               <li key={item.name} className="mb-1">
-                <Link href={item.href}>
-                  <a className={cn(
+                <Link 
+                  href={item.href}
+                  className={cn(
                     "flex items-center p-3 rounded-lg transition-colors",
                     location === item.href
                       ? "bg-gray-700 text-white"
                       : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                  )}>
-                    {item.icon}
-                    <span>{item.name}</span>
-                  </a>
+                  )}
+                >
+                  {item.icon}
+                  <span>{item.name}</span>
                 </Link>
               </li>
             ))}
@@ -112,19 +113,18 @@ export default function Layout({ children, onAddAsset }: LayoutProps) {
             <ul>
               {navigationItems.map((item) => (
                 <li key={item.name} className="mb-1">
-                  <Link href={item.href}>
-                    <a 
-                      className={cn(
-                        "flex items-center p-3 rounded-lg transition-colors",
-                        location === item.href
-                          ? "bg-gray-700 text-white"
-                          : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                      )}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {item.icon}
-                      <span>{item.name}</span>
-                    </a>
+                  <Link 
+                    href={item.href}
+                    className={cn(
+                      "flex items-center p-3 rounded-lg transition-colors",
+                      location === item.href
+                        ? "bg-gray-700 text-white"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.icon}
+                    <span>{item.name}</span>
                   </Link>
                 </li>
               ))}
@@ -140,17 +140,19 @@ export default function Layout({ children, onAddAsset }: LayoutProps) {
 
         {/* Mobile Bottom Navigation */}
         <nav className="md:hidden flex items-center justify-around bg-white border-t border-gray-200 py-3">
-          <Link href="/">
-            <a className={cn("flex flex-col items-center", location === "/" ? "text-blue-500" : "text-gray-500")}>
-              <LayoutDashboard className="h-5 w-5" />
-              <span className="text-xs mt-1">Dashboard</span>
-            </a>
+          <Link 
+            href="/"
+            className={cn("flex flex-col items-center", location === "/" ? "text-blue-500" : "text-gray-500")}
+          >
+            <LayoutDashboard className="h-5 w-5" />
+            <span className="text-xs mt-1">Dashboard</span>
           </Link>
-          <Link href="/assets">
-            <a className={cn("flex flex-col items-center", location === "/assets" ? "text-blue-500" : "text-gray-500")}>
-              <Wallet className="h-5 w-5" />
-              <span className="text-xs mt-1">Assets</span>
-            </a>
+          <Link 
+            href="/assets"
+            className={cn("flex flex-col items-center", location === "/assets" ? "text-blue-500" : "text-gray-500")}
+          >
+            <Wallet className="h-5 w-5" />
+            <span className="text-xs mt-1">Assets</span>
           </Link>
           <Button 
             onClick={onAddAsset} 
@@ -158,17 +160,19 @@ export default function Layout({ children, onAddAsset }: LayoutProps) {
           >
             <Plus className="h-6 w-6" />
           </Button>
-          <Link href="/history">
-            <a className={cn("flex flex-col items-center", location === "/history" ? "text-blue-500" : "text-gray-500")}>
-              <History className="h-5 w-5" />
-              <span className="text-xs mt-1">History</span>
-            </a>
+          <Link 
+            href="/history"
+            className={cn("flex flex-col items-center", location === "/history" ? "text-blue-500" : "text-gray-500")}
+          >
+            <History className="h-5 w-5" />
+            <span className="text-xs mt-1">History</span>
           </Link>
-          <Link href="/settings">
-            <a className={cn("flex flex-col items-center", location === "/settings" ? "text-blue-500" : "text-gray-500")}>
-              <User className="h-5 w-5" />
-              <span className="text-xs mt-1">Profile</span>
-            </a>
+          <Link 
+            href="/settings"
+            className={cn("flex flex-col items-center", location === "/settings" ? "text-blue-500" : "text-gray-500")}
+          >
+            <User className="h-5 w-5" />
+            <span className="text-xs mt-1">Profile</span>
           </Link>
         </nav>
       </main>

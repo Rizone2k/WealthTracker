@@ -30,7 +30,13 @@ import {
   Wallet, 
   LineChart, 
   Smartphone, 
-  BarChart 
+  BarChart,
+  Home,
+  GemIcon,
+  Bitcoin,
+  BadgeDollarSign,
+  Globe,
+  Car
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -67,8 +73,20 @@ export default function AssetTable({ assets, onAssetChange }: AssetTableProps) {
         return <Smartphone className="text-yellow-500" />;
       case "Stock Portfolio":
         return <BarChart className="text-purple-500" />;
+      case "Real Estate":
+        return <Home className="text-red-500" />;
+      case "Gold & Jewelry":
+        return <GemIcon className="text-yellow-500" />;
+      case "Cryptocurrency":
+        return <Bitcoin className="text-blue-500" />;
+      case "Bonds":
+        return <BadgeDollarSign className="text-emerald-500" />;
+      case "Foreign Currency":
+        return <Globe className="text-sky-500" />;
+      case "Vehicle":
+        return <Car className="text-violet-500" />;
       default:
-        return <Wallet className="text-gray-500" />;
+        return <Wallet className="text-pink-500" />;
     }
   };
 

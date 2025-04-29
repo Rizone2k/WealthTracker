@@ -166,12 +166,18 @@ export default function AssetForm({
                         <SelectValue placeholder="Select a source" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="max-h-64 overflow-auto">
                       <SelectItem value="Cash">Cash</SelectItem>
                       <SelectItem value="Savings Account">Savings Account</SelectItem>
                       <SelectItem value="Investment Fund">Investment Fund</SelectItem>
                       <SelectItem value="Digital Wallet">Digital Wallet</SelectItem>
                       <SelectItem value="Stock Portfolio">Stock Portfolio</SelectItem>
+                      <SelectItem value="Real Estate">Real Estate</SelectItem>
+                      <SelectItem value="Gold & Jewelry">Gold & Jewelry</SelectItem>
+                      <SelectItem value="Cryptocurrency">Cryptocurrency</SelectItem>
+                      <SelectItem value="Bonds">Bonds</SelectItem>
+                      <SelectItem value="Foreign Currency">Foreign Currency</SelectItem>
+                      <SelectItem value="Vehicle">Vehicle</SelectItem>
                       <SelectItem value="Other">Other</SelectItem>
                     </SelectContent>
                   </Select>
