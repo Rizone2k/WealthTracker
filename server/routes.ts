@@ -95,6 +95,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // API Routes for sources
+  app.get("/api/sources", async (req, res) => {
+    try {
+      const sources = await storage.getAllSources();
+      res.json(sources);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch sources" });
+    }
+  });
+
+  app.post("/api/sources", async (req, res) => {
+    try {
+      const { name } = req.body;
+
+      if (!name || typeof name !== 'string' || name.trim() === '') {
+        return res.status(400).json({ message: "Source name is required" });
+      }
+      
+      const result = await storage.addSource(name);
+      res.status(201).json(result);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to add source" });
+    }
+  });
+
+  app.put("/api/sources/:source", async (req, res) => {
+    try {
+      const oldSource = req.params.source;
+      const { name } = req.body;
+
+      if (!name || typeof name !== 'string' || name.trim() === '') {
+        return res.status(400).json({ message: "New source name is required" });
+      }
+      
+      const result = await storage.updateSource(oldSource, name);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update source" });
+    }
+  });
+
+  app.delete("/api/sources/:source", async (req, res) => {
+    try {
+      const source = req.params.source;
+      const deleted = await storage.deleteSource(source);
+      
+      if (!deleted) {
+        return res.status(400).json({ 
+          message: "Source could not be deleted. Standard sources cannot be deleted." 
+        });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete source" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

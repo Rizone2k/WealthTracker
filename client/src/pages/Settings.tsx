@@ -57,9 +57,8 @@ export default function Settings() {
     if (!newSource.trim()) return;
 
     try {
-      const response = await apiRequest("POST", "/api/sources", { name: newSource });
-      const sourceResponse = response as SourceResponse;
-      setSources([...sources, sourceResponse.name]);
+      const response = await apiRequest<{ name: string }>("POST", "/api/sources", { name: newSource });
+      setSources([...sources, response.name]);
       setNewSource("");
       toast({
         title: "Success",
