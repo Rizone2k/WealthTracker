@@ -83,7 +83,7 @@ export default function Settings() {
 
     try {
       const oldSource = sources[editingSource.index];
-      const response = await apiRequest("PUT", `/api/sources/${oldSource}`, {
+      const response = await apiRequest<{ name: string }>("PUT", `/api/sources/${oldSource}`, {
         name: editingSource.value,
       });
 
