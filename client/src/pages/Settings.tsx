@@ -32,11 +32,7 @@ export default function Settings() {
   const [newSource, setNewSource] = useState("");
   const [editingSource, setEditingSource] = useState<{ index: number; value: string } | null>(null);
   
-  // Check if a source is a default (built-in) source
-  const isDefaultSource = (source: string): boolean => {
-    const defaultSources = ["Cash", "Savings Account", "Investment Fund", "Digital Wallet", "Stock Portfolio", "Real Estate", "Gold & Jewelry", "Cryptocurrency", "Bonds", "Foreign Currency", "Vehicle", "Other"];
-    return defaultSources.includes(source);
-  };
+  // No longer checking for default sources, as all sources are now editable and deletable
 
   useEffect(() => {
     // Fetch sources from the API
@@ -82,17 +78,6 @@ export default function Settings() {
 
   const handleEditSource = (index: number) => {
     const source = sources[index];
-    
-    // Check if it's a default source that cannot be edited
-    if (isDefaultSource(source)) {
-      toast({
-        title: "Cannot Edit",
-        description: "Default sources cannot be edited",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setEditingSource({ index, value: source });
   };
 
@@ -126,16 +111,6 @@ export default function Settings() {
 
   const handleDeleteSource = async (index: number) => {
     const sourceToDelete = sources[index];
-    
-    // Check if it's a default source that cannot be deleted
-    if (isDefaultSource(sourceToDelete)) {
-      toast({
-        title: "Cannot Delete",
-        description: "Default sources cannot be deleted",
-        variant: "destructive",
-      });
-      return;
-    }
 
     try {
       await apiRequest("DELETE", `/api/sources/${sourceToDelete}`);
@@ -152,7 +127,7 @@ export default function Settings() {
       console.error("Failed to delete source:", error);
       toast({
         title: "Error",
-        description: "Failed to delete asset source. Standard sources cannot be deleted.",
+        description: "Failed to delete asset source. It may be in use by existing assets.",
         variant: "destructive",
       });
     }
@@ -211,11 +186,6 @@ export default function Settings() {
                       ) : (
                         <div className="flex items-center">
                           {source}
-                          {isDefaultSource(source) && (
-                            <span className="ml-2 px-1.5 py-0.5 text-xs rounded bg-gray-100 text-gray-600">
-                              Default
-                            </span>
-                          )}
                         </div>
                       )}
                     </TableCell>

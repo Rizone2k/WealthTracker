@@ -88,8 +88,21 @@ export class MemStorage implements IStorage {
   async getAllSources(): Promise<string[]> {
     // Get sources from assetSourceSchema enum values and add custom sources
     const enumSources = Object.values(assetSourceSchema.enum);
-    const customSourcesArray = Array.from(this.customSources);
-    const allSources = [...enumSources, ...customSourcesArray];
+    const customSourcesArray = Array.from(this.customSources)
+      // Filter out "deleted" markers
+      .filter(source => !source.startsWith('__deleted_'));
+      
+    // Find deleted sources to exclude
+    const deletedSources = Array.from(this.customSources)
+      .filter(source => source.startsWith('__deleted_'))
+      .map(source => source.replace('__deleted_', ''));
+    
+    // Filter out enum sources that have been "deleted"
+    const filteredEnumSources = enumSources.filter(
+      source => !deletedSources.includes(source)
+    );
+    
+    const allSources = [...filteredEnumSources, ...customSourcesArray];
     
     // Return unique sources
     return Array.from(new Set(allSources));
@@ -101,44 +114,53 @@ export class MemStorage implements IStorage {
   }
 
   async updateSource(oldSource: string, newSource: string): Promise<{ name: string }> {
-    // Check if oldSource is in the default sources
-    const defaultSources = ["Cash", "Savings Account", "Investment Fund", "Digital Wallet", 
-      "Stock Portfolio", "Real Estate", "Gold & Jewelry", "Cryptocurrency", 
-      "Bonds", "Foreign Currency", "Vehicle", "Other"];
-      
-    if (defaultSources.includes(oldSource)) {
-      // Cannot update default sources
-      return { name: oldSource };
-    }
+    // All sources are editable
     
-    // Check if the source exists in custom sources
-    if (this.customSources.has(oldSource)) {
+    // For enum sources (default ones), we need to store in customSources 
+    // to track the changes since we can't modify the enum
+    const enumSources = Object.values(assetSourceSchema.enum);
+    const isEnumSource = enumSources.includes(oldSource as any);
+    
+    // If it's not a custom source already, add to custom sources
+    if (!this.customSources.has(oldSource)) {
+      this.customSources.add(newSource);
+    } else {
+      // Update existing custom source
       this.customSources.delete(oldSource);
       this.customSources.add(newSource);
-      
-      // Update any assets that use the old source name
-      this.assets.forEach((asset, key) => {
-        if (asset.source === oldSource) {
-          const updatedAsset = { ...asset, source: newSource, updatedAt: new Date() };
-          this.assets.set(key, updatedAsset);
-        }
-      });
-      
-      return { name: newSource };
     }
     
-    // Source doesn't exist, return the original name
-    return { name: oldSource };
+    // Update any assets that use the old source name
+    this.assets.forEach((asset, key) => {
+      if (asset.source === oldSource) {
+        const updatedAsset = { ...asset, source: newSource, updatedAt: new Date() };
+        this.assets.set(key, updatedAsset);
+      }
+    });
+    
+    return { name: newSource };
   }
 
   async deleteSource(source: string): Promise<boolean> {
-    // Only allow deletion of custom sources, not enum sources
+    // Check if any assets are using this source
+    const assetsUsingSource = Array.from(this.assets.values()).some(
+      asset => asset.source === source
+    );
+    
+    if (assetsUsingSource) {
+      // Cannot delete sources that are in use
+      return false;
+    }
+    
+    // Delete from custom sources
     if (this.customSources.has(source)) {
       return this.customSources.delete(source);
     }
     
-    // Cannot delete sources from the enum
-    return false;
+    // For built-in sources, we add to a "deleted" list
+    // (this is a workaround since we can't remove from the enum)
+    this.customSources.add(`__deleted_${source}`);
+    return true;
   }
 }
 
