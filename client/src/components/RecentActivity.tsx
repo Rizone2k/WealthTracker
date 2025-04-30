@@ -17,27 +17,55 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
   // Take only the first 4 most recent assets
   const recentAssets = sortedAssets.slice(0, 4);
 
-  const getActivityIcon = (asset: Asset) => {
-    // Use a consistent indicator icon based on the asset source
-    // In a future version, this could be based on the type of activity
-    return (
-      <div className="bg-blue-100 rounded-full p-2 mr-3">
-        <Edit className="h-4 w-4 text-blue-500" />
-      </div>
-    );
+  const getActivityIcon = (index: number) => {
+    // Just for simulation, we'll use different icons for demonstration
+    // In a real app, this would be based on the type of activity (add, remove, update)
+    if (index % 3 === 0) {
+      return (
+        <div className="bg-blue-100 rounded-full p-2 mr-3">
+          <Plus className="h-4 w-4 text-blue-500" />
+        </div>
+      );
+    } else if (index % 3 === 1) {
+      return (
+        <div className="bg-red-100 rounded-full p-2 mr-3">
+          <Minus className="h-4 w-4 text-red-500" />
+        </div>
+      );
+    } else {
+      return (
+        <div className="bg-indigo-100 rounded-full p-2 mr-3">
+          <Edit className="h-4 w-4 text-indigo-500" />
+        </div>
+      );
+    }
   };
 
-  const getActivityDescription = (asset: Asset) => {
-    // For now, we just display the source as the main descriptor
-    // In a real app with transaction history, this would show the actual action
-    return `${asset.source}`;
+  const getActivityDescription = (index: number, asset: Asset) => {
+    // For demonstration purposes
+    if (index % 3 === 0) {
+      return `Added to ${asset.source}`;
+    } else if (index % 3 === 1) {
+      return `Removed from ${asset.source}`;
+    } else {
+      return `Updated ${asset.source}`;
+    }
   };
 
-  const getActivityAmount = (asset: Asset) => {
-    // Display actual amount rather than mock data
-    return (
-      <p className="text-sm font-medium text-blue-500">{formatCurrency(asset.amount)}</p>
-    );
+  const getActivityAmount = (index: number, asset: Asset) => {
+    if (index % 3 === 0) {
+      return (
+        <p className="text-sm font-medium text-green-500">+{formatCurrency(asset.amount)}</p>
+      );
+    } else if (index % 3 === 1) {
+      return (
+        <p className="text-sm font-medium text-red-500">-{formatCurrency(asset.amount / 4)}</p>
+      );
+    } else {
+      return (
+        <p className="text-sm font-medium text-indigo-500">±0 ₫</p>
+      );
+    }
   };
 
   return (
@@ -53,19 +81,14 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
           {recentAssets.length > 0 ? (
             recentAssets.map((asset, index) => (
               <div key={asset.id} className="flex items-start">
-                {getActivityIcon(asset)}
+                {getActivityIcon(index)}
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-900">
-                    {getActivityDescription(asset)}
+                    {getActivityDescription(index, asset)}
                   </p>
-                  {asset.description && (
-                    <p className="text-xs text-gray-700 italic">
-                      "{asset.description}"
-                    </p>
-                  )}
                   <p className="text-xs text-gray-500">{formatDate(asset.updatedAt)}</p>
                 </div>
-                {getActivityAmount(asset)}
+                {getActivityAmount(index, asset)}
               </div>
             ))
           ) : (
