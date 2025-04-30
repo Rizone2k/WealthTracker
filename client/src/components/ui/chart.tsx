@@ -43,9 +43,30 @@ export function ChartComponent({
     const ctx = chartRef.current.getContext("2d");
     if (!ctx) return;
 
+    // If chart type is pie or doughnut, add special plugins
+    let customPlugins = {};
+    if (type === 'pie' || type === 'doughnut') {
+      customPlugins = {
+        datalabels: {
+          formatter: (value: number, ctx: any) => {
+            const dataset = ctx.chart.data.datasets[0];
+            const total = dataset.data.reduce((acc: number, value: number) => acc + value, 0);
+            const percentage = Math.round((value / total) * 100);
+            return percentage > 5 ? `${percentage}%` : ''; // Only show if segment is big enough
+          },
+          color: '#ffffff',
+          font: {
+            weight: 'bold',
+            size: 12
+          }
+        }
+      };
+    }
+
     const defaultOptions = {
       responsive: true,
       maintainAspectRatio: false,
+      cutout: type === 'pie' ? '0%' : '50%', // Change to doughnut if type is 'doughnut'
       plugins: {
         legend: {
           display: false,
@@ -55,10 +76,14 @@ export function ChartComponent({
             label: function (context: any) {
               let label = context.label || "";
               let value = context.raw || 0;
-              return `${label}: ${formatCurrency(value)}`;
+              const dataset = context.chart.data.datasets[0];
+              const total = dataset.data.reduce((sum: number, val: number) => sum + val, 0);
+              const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+              return `${label}: ${formatCurrency(value)} (${percentage}%)`;
             },
           },
         },
+        ...customPlugins
       },
     };
 

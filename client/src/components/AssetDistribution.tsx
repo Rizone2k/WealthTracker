@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ChartComponent } from "@/components/ui/chart";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCcw, Plus } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatPercentage } from "@/lib/utils";
 
 interface AssetDistributionProps {
   assets: Asset[];
@@ -20,6 +20,9 @@ export default function AssetDistribution({ assets, onAddClick }: AssetDistribut
     acc[source] += asset.amount;
     return acc;
   }, {} as Record<string, number>);
+
+  // Calculate total of all assets
+  const totalAmount = Object.values(assetGroups).reduce((sum, amount) => sum + amount, 0);
 
   // Sort by amount descending
   const sortedEntries = Object.entries(assetGroups).sort((a, b) => b[1] - a[1]);
@@ -52,7 +55,7 @@ export default function AssetDistribution({ assets, onAddClick }: AssetDistribut
           <div className="w-full md:w-1/2 mb-6 md:mb-0 flex justify-center items-center">
             {assets.length > 0 ? (
               <div className="w-64 h-64">
-                <ChartComponent data={chartData} type="pie" />
+                <ChartComponent data={chartData} type="doughnut" />
               </div>
             ) : (
               <div className="w-64 h-64 flex items-center justify-center text-gray-400 flex-col">
@@ -74,9 +77,14 @@ export default function AssetDistribution({ assets, onAddClick }: AssetDistribut
                       style={{ backgroundColor: chartData.colors[index] }}
                     ></div>
                     <span className="text-sm text-gray-700 flex-1">{source}</span>
-                    <span className="text-sm font-medium text-gray-900">
-                      {formatCurrency(amount)}
-                    </span>
+                    <div className="text-right">
+                      <span className="text-sm font-medium text-gray-900 block">
+                        {formatCurrency(amount)}
+                      </span>
+                      <span className="text-xs text-gray-500 block">
+                        {formatPercentage(amount, totalAmount)}
+                      </span>
+                    </div>
                   </div>
                 ))
               ) : (

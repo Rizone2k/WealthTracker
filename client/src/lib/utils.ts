@@ -30,6 +30,11 @@ export function getRandomColor(): string {
   return color;
 }
 
+export function formatPercentage(value: number, total: number): string {
+  if (total === 0) return "0%";
+  return `${Math.round((value / total) * 100)}%`;
+}
+
 export function formatDate(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   
