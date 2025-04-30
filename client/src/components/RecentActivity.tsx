@@ -86,6 +86,11 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
                   <p className="text-sm font-medium text-gray-900">
                     {getActivityDescription(index, asset)}
                   </p>
+                  {asset.description && (
+                    <p className="text-xs text-gray-600 italic">
+                      "{asset.description}"
+                    </p>
+                  )}
                   <p className="text-xs text-gray-500">{formatDate(asset.updatedAt)}</p>
                 </div>
                 {getActivityAmount(index, asset)}
