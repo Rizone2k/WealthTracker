@@ -46,9 +46,10 @@ import AssetForm from "./AssetForm";
 interface AssetTableProps {
   assets: Asset[];
   onAssetChange: () => void;
+  sources?: string[];
 }
 
-export default function AssetTable({ assets, onAssetChange }: AssetTableProps) {
+export default function AssetTable({ assets, onAssetChange, sources = [] }: AssetTableProps) {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [editAsset, setEditAsset] = useState<Asset | undefined>(undefined);
@@ -247,6 +248,7 @@ export default function AssetTable({ assets, onAssetChange }: AssetTableProps) {
           }}
           onSuccess={onAssetChange}
           editAsset={editAsset}
+          sources={sources}
         />
       )}
 

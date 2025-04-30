@@ -47,13 +47,16 @@ export default function Dashboard() {
     queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
   }, [queryClient]);
 
-  if (assetsError) {
-    toast({
-      title: "Error",
-      description: "Failed to load assets",
-      variant: "destructive",
-    });
-  }
+  // Show toast when there's an error loading assets
+  useEffect(() => {
+    if (assetsError) {
+      toast({
+        title: "Error",
+        description: "Failed to load assets",
+        variant: "destructive",
+      });
+    }
+  }, [assetsError, toast]);
 
   return (
     <Layout onAddAsset={handleAddAssetClick}>
@@ -148,7 +151,8 @@ export default function Dashboard() {
       ) : (
         <AssetTable 
           assets={assets} 
-          onAssetChange={handleAssetChange} 
+          onAssetChange={handleAssetChange}
+          sources={sources}
         />
       )}
 
@@ -156,6 +160,7 @@ export default function Dashboard() {
         isOpen={isAddAssetModalOpen}
         onClose={() => setIsAddAssetModalOpen(false)}
         onSuccess={handleAssetChange}
+        sources={sources}
       />
     </Layout>
   );

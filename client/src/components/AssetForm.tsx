@@ -39,6 +39,7 @@ interface AssetFormProps {
   onClose: () => void;
   onSuccess: () => void;
   editAsset?: Asset;
+  sources?: string[];
 }
 
 const formSchema = insertAssetSchema.extend({
@@ -53,33 +54,41 @@ export default function AssetForm({
   onClose,
   onSuccess,
   editAsset,
+  sources: providedSources,
 }: AssetFormProps) {
   const { toast } = useToast();
   const [showOtherInput, setShowOtherInput] = useState(false);
   const [availableSources, setAvailableSources] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch available sources when component mounts
+  // Use provided sources or fetch them if not available
   useEffect(() => {
-    const fetchSources = async () => {
-      setIsLoading(true);
-      try {
-        const sources = await apiRequest<string[]>("GET", "/api/sources");
-        setAvailableSources(sources);
-      } catch (error) {
-        console.error("Failed to fetch sources:", error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch available sources",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (providedSources && providedSources.length > 0) {
+      // Use the provided sources directly
+      setAvailableSources(providedSources);
+      setIsLoading(false);
+    } else {
+      // Fetch available sources from the API
+      const fetchSources = async () => {
+        setIsLoading(true);
+        try {
+          const sources = await apiRequest<string[]>("GET", "/api/sources");
+          setAvailableSources(sources);
+        } catch (error) {
+          console.error("Failed to fetch sources:", error);
+          toast({
+            title: "Error",
+            description: "Failed to fetch available sources",
+            variant: "destructive",
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-    fetchSources();
-  }, [toast]);
+      fetchSources();
+    }
+  }, [toast, providedSources]);
   
   const defaultValues = editAsset
     ? {
