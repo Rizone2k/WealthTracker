@@ -74,6 +74,117 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to update asset" });
     }
   });
+  
+  // PATCH endpoint for assets (supporting partial updates)
+  app.patch("/api/assets/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Handle special case for merged assets (negative IDs)
+      if (id < 0) {
+        // This is a virtual merged asset - we need to find all assets with the same source
+        // and update them with the new amount proportionally
+        
+        try {
+          // Get all assets
+          const allAssets = await storage.getAllAssets();
+          
+          // Find assets with the matching source based on the merged asset ID
+          // For now, our frontend uses negative IDs where -1 is the first source, -2 is the second, etc.
+          // So we need to get the proper source name
+          
+          // Group assets by source to get an array of unique sources in the same order as frontend
+          const sourceGroups = allAssets.reduce((groups, asset) => {
+            if (!groups[asset.source]) {
+              groups[asset.source] = [];
+            }
+            groups[asset.source].push(asset);
+            return groups;
+          }, {} as Record<string, Asset[]>);
+          
+          // Convert to array and sort by total amount (highest first) to match frontend ordering
+          const groupedSources = Object.entries(sourceGroups)
+            .map(([source, assets]) => ({
+              source,
+              totalAmount: assets.reduce((sum, asset) => sum + asset.amount, 0),
+              assets
+            }))
+            .sort((a, b) => b.totalAmount - a.totalAmount);
+          
+          // Now we can get the correct source based on the negative ID
+          // -1 means first source, -2 means second source, etc.
+          const sourceIndex = Math.abs(id) - 1;
+          
+          if (sourceIndex >= 0 && sourceIndex < groupedSources.length) {
+            const sourceGroup = groupedSources[sourceIndex];
+            const source = sourceGroup.source;
+            
+            // Get the assets with this source
+            const assetsWithSource = allAssets.filter(asset => asset.source === source);
+            
+            // If there's an amount change, distribute it proportionally
+            if (req.body.amount !== undefined) {
+              const newTotalAmount = req.body.amount;
+              const currentTotalAmount = assetsWithSource.reduce((sum, asset) => sum + asset.amount, 0);
+              
+              // Only update if the amount changed
+              if (newTotalAmount !== currentTotalAmount) {
+                const ratio = newTotalAmount / currentTotalAmount;
+                
+                // Update each asset with the new proportional amount
+                const updatePromises = assetsWithSource.map(async (asset) => {
+                  const newAmount = Math.round(asset.amount * ratio);
+                  await storage.updateAsset(asset.id, { 
+                    amount: newAmount,
+                    description: req.body.description !== undefined ? req.body.description : asset.description
+                  });
+                });
+                
+                await Promise.all(updatePromises);
+              } else if (req.body.description !== undefined) {
+                // If only description changed, update all assets with the new description
+                const updatePromises = assetsWithSource.map(async (asset) => {
+                  await storage.updateAsset(asset.id, { 
+                    description: req.body.description 
+                  });
+                });
+                
+                await Promise.all(updatePromises);
+              }
+            }
+            
+            return res.status(200).json({ 
+              message: `Updated ${assetsWithSource.length} assets for source "${source}"`,
+              sourceCount: assetsWithSource.length,
+              source
+            });
+          } else {
+            return res.status(404).json({ message: "Source group not found" });
+          }
+        } catch (error) {
+          console.error("Error updating merged assets:", error);
+          return res.status(500).json({ message: "Failed to update merged assets" });
+        }
+      }
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid asset ID" });
+      }
+      
+      // We'll use a partial schema for PATCH
+      // This isn't strictly necessary since we're not validating in this route
+      const updateData = req.body;
+      const updatedAsset = await storage.updateAsset(id, updateData);
+      
+      if (!updatedAsset) {
+        return res.status(404).json({ message: "Asset not found" });
+      }
+      
+      res.json(updatedAsset);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update asset" });
+    }
+  });
 
   app.delete("/api/assets/:id", async (req, res) => {
     try {

@@ -197,16 +197,35 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
       // Parse the formatted amount back to a number
       const numericAmount = parseFormattedCurrency(editAmount);
       
-      // Make API request to update the asset
-      await apiRequest("PATCH", `/api/assets/${asset.id}`, {
-        amount: numericAmount,
-        description: editDescription
-      });
+      // Check if this is a merged asset with _originalAssets
+      const isMerged = (asset as any)._originalAssets;
       
-      toast({
-        title: "Asset updated",
-        description: "Asset has been updated successfully",
-      });
+      if (isMerged) {
+        // For merged assets, we'll update each original asset in the group
+        const originalAssets = (asset as any)._originalAssets;
+        
+        // If this is a merged asset, just update the merged asset ID (backend handles the logic)
+        await apiRequest("PATCH", `/api/assets/${asset.id}`, {
+          amount: numericAmount,
+          description: editDescription
+        });
+        
+        toast({
+          title: "Assets updated",
+          description: `Successfully updated all ${originalAssets.length} assets in this group.`,
+        });
+      } else {
+        // For regular assets, update normally
+        await apiRequest("PATCH", `/api/assets/${asset.id}`, {
+          amount: numericAmount,
+          description: editDescription
+        });
+        
+        toast({
+          title: "Asset updated",
+          description: "Asset has been updated successfully",
+        });
+      }
       
       // Reset the inline edit state
       setInlineEditAsset(null);
@@ -216,6 +235,7 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
       // Refresh the assets
       onAssetChange();
     } catch (error) {
+      console.error("Update failed:", error);
       toast({
         title: "Error",
         description: "Failed to update asset",
