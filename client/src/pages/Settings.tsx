@@ -81,7 +81,19 @@ export default function Settings() {
   };
 
   const handleEditSource = (index: number) => {
-    setEditingSource({ index, value: sources[index] });
+    const source = sources[index];
+    
+    // Check if it's a default source that cannot be edited
+    if (isDefaultSource(source)) {
+      toast({
+        title: "Cannot Edit",
+        description: "Default sources cannot be edited",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setEditingSource({ index, value: source });
   };
 
   const handleUpdateSource = async () => {

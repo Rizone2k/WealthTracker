@@ -129,6 +129,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "New source name is required" });
       }
       
+      // Check if it's a default source
+      const defaultSources = ["Cash", "Savings Account", "Investment Fund", "Digital Wallet", 
+        "Stock Portfolio", "Real Estate", "Gold & Jewelry", "Cryptocurrency", 
+        "Bonds", "Foreign Currency", "Vehicle", "Other"];
+      if (defaultSources.includes(oldSource)) {
+        return res.status(400).json({ 
+          message: "Default sources cannot be modified" 
+        });
+      }
+      
       const result = await storage.updateSource(oldSource, name);
       res.json(result);
     } catch (error) {

@@ -101,24 +101,34 @@ export class MemStorage implements IStorage {
   }
 
   async updateSource(oldSource: string, newSource: string): Promise<{ name: string }> {
+    // Check if oldSource is in the default sources
+    const defaultSources = ["Cash", "Savings Account", "Investment Fund", "Digital Wallet", 
+      "Stock Portfolio", "Real Estate", "Gold & Jewelry", "Cryptocurrency", 
+      "Bonds", "Foreign Currency", "Vehicle", "Other"];
+      
+    if (defaultSources.includes(oldSource)) {
+      // Cannot update default sources
+      return { name: oldSource };
+    }
+    
     // Check if the source exists in custom sources
     if (this.customSources.has(oldSource)) {
       this.customSources.delete(oldSource);
       this.customSources.add(newSource);
-    } else {
-      // If not in custom sources, add as a new source
-      this.customSources.add(newSource);
+      
+      // Update any assets that use the old source name
+      this.assets.forEach((asset, key) => {
+        if (asset.source === oldSource) {
+          const updatedAsset = { ...asset, source: newSource, updatedAt: new Date() };
+          this.assets.set(key, updatedAsset);
+        }
+      });
+      
+      return { name: newSource };
     }
-
-    // Update any assets that use the old source name
-    this.assets.forEach((asset, key) => {
-      if (asset.source === oldSource) {
-        const updatedAsset = { ...asset, source: newSource, updatedAt: new Date() };
-        this.assets.set(key, updatedAsset);
-      }
-    });
-
-    return { name: newSource };
+    
+    // Source doesn't exist, return the original name
+    return { name: oldSource };
   }
 
   async deleteSource(source: string): Promise<boolean> {
