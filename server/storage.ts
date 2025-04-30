@@ -86,22 +86,29 @@ export class MemStorage implements IStorage {
 
   // Custom sources methods
   async getAllSources(): Promise<string[]> {
-    // Get sources from assetSourceSchema enum values and add custom sources
+    // Get default sources from enum
     const enumSources = Object.values(assetSourceSchema.enum);
+    
+    // Get all custom sources, excluding special markers
     const customSourcesArray = Array.from(this.customSources)
-      // Filter out "deleted" markers
-      .filter(source => !source.startsWith('__deleted_'));
+      .filter(source => !source.startsWith('__'));
       
     // Find deleted sources to exclude
     const deletedSources = Array.from(this.customSources)
       .filter(source => source.startsWith('__deleted_'))
       .map(source => source.replace('__deleted_', ''));
+      
+    // Find modified enum sources to exclude
+    const changedSources = Array.from(this.customSources)
+      .filter(source => source.startsWith('__changed_'))
+      .map(source => source.replace('__changed_', ''));
     
-    // Filter out enum sources that have been "deleted"
+    // Filter out enum sources that have been deleted or modified
     const filteredEnumSources = enumSources.filter(
-      source => !deletedSources.includes(source)
+      source => !deletedSources.includes(source) && !changedSources.includes(source)
     );
     
+    // Combine filtered enum sources with custom sources
     const allSources = [...filteredEnumSources, ...customSourcesArray];
     
     // Return unique sources
@@ -114,20 +121,20 @@ export class MemStorage implements IStorage {
   }
 
   async updateSource(oldSource: string, newSource: string): Promise<{ name: string }> {
-    // All sources are editable
-    
-    // For enum sources (default ones), we need to store in customSources 
-    // to track the changes since we can't modify the enum
+    // Handle both enum sources and custom sources
     const enumSources = Object.values(assetSourceSchema.enum);
     const isEnumSource = enumSources.includes(oldSource as any);
     
-    // If it's not a custom source already, add to custom sources
-    if (!this.customSources.has(oldSource)) {
-      this.customSources.add(newSource);
-    } else {
-      // Update existing custom source
+    // Add the new source to custom sources (tracks overrides for enum sources)
+    this.customSources.add(newSource);
+    
+    // If this is an enum source, mark it as "changed" with a special prefix
+    if (isEnumSource) {
+      this.customSources.add(`__changed_${oldSource}`);
+    } 
+    // If this is a custom source, remove the old one
+    else if (this.customSources.has(oldSource)) {
       this.customSources.delete(oldSource);
-      this.customSources.add(newSource);
     }
     
     // Update any assets that use the old source name
