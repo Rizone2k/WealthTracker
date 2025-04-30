@@ -1,4 +1,30 @@
 import { assets, type Asset, type InsertAsset, type UpdateAsset, assetSourceSchema } from "@shared/schema";
+import * as fs from 'fs';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+
+// Get the directory name in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const DATA_FILE = path.join(__dirname, '../data/storage.json');
+
+// Ensure the data directory exists
+function ensureDataDir() {
+  const dir = path.dirname(DATA_FILE);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+}
+
+// Create a default data structure
+function createDefaultData() {
+  return {
+    assets: [],
+    nextId: 1,
+    customSources: []
+  };
+}
 
 export interface IStorage {
   getAllAssets(): Promise<Asset[]>;
@@ -14,7 +40,7 @@ export interface IStorage {
   deleteSource(source: string): Promise<boolean>;
 }
 
-export class MemStorage implements IStorage {
+export class FileStorage implements IStorage {
   private assets: Map<number, Asset>;
   private currentId: number;
   private customSources: Set<string>;
@@ -24,8 +50,64 @@ export class MemStorage implements IStorage {
     this.currentId = 1;
     this.customSources = new Set<string>();
     
-    // Add some sample assets for development
-    this.initSampleAssets();
+    // Load existing data if available
+    this.loadData();
+  }
+
+  private loadData() {
+    ensureDataDir();
+    
+    try {
+      if (fs.existsSync(DATA_FILE)) {
+        const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+        
+        // Load assets
+        if (data.assets && Array.isArray(data.assets)) {
+          data.assets.forEach((asset: Asset) => {
+            this.assets.set(asset.id, asset);
+          });
+        }
+        
+        // Load ID counter
+        if (data.nextId && typeof data.nextId === 'number') {
+          this.currentId = data.nextId;
+        }
+        
+        // Load custom sources
+        if (data.customSources && Array.isArray(data.customSources)) {
+          data.customSources.forEach((source: string) => {
+            this.customSources.add(source);
+          });
+        }
+        
+        console.log(`Loaded ${this.assets.size} assets from storage file`);
+      } else {
+        // Initialize with sample data if no file exists
+        this.initSampleAssets();
+        this.saveData();
+        console.log('Created new storage file with sample data');
+      }
+    } catch (error) {
+      console.error('Error loading data from file:', error);
+      // Fall back to sample data
+      this.initSampleAssets();
+    }
+  }
+  
+  private saveData() {
+    ensureDataDir();
+    
+    try {
+      const data = {
+        assets: Array.from(this.assets.values()),
+        nextId: this.currentId,
+        customSources: Array.from(this.customSources)
+      };
+      
+      fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+    } catch (error) {
+      console.error('Error saving data to file:', error);
+    }
   }
 
   private initSampleAssets() {
@@ -37,7 +119,20 @@ export class MemStorage implements IStorage {
       { source: "Stock Portfolio", amount: 8000000, description: "Stock investments" }
     ];
 
-    sampleAssets.forEach(asset => this.createAsset(asset));
+    sampleAssets.forEach(asset => {
+      const id = this.currentId++;
+      const now = new Date();
+      const description = asset.description === undefined ? null : asset.description;
+      
+      const newAsset: Asset = { 
+        ...asset, 
+        description, 
+        id, 
+        updatedAt: now 
+      };
+      
+      this.assets.set(id, newAsset);
+    });
   }
 
   async getAllAssets(): Promise<Asset[]> {
@@ -60,6 +155,7 @@ export class MemStorage implements IStorage {
       updatedAt: now 
     };
     this.assets.set(id, asset);
+    this.saveData();
     return asset;
   }
 
@@ -77,11 +173,16 @@ export class MemStorage implements IStorage {
     };
     
     this.assets.set(id, updatedAsset);
+    this.saveData();
     return updatedAsset;
   }
 
   async deleteAsset(id: number): Promise<boolean> {
-    return this.assets.delete(id);
+    const result = this.assets.delete(id);
+    if (result) {
+      this.saveData();
+    }
+    return result;
   }
 
   // Custom sources methods
@@ -117,6 +218,7 @@ export class MemStorage implements IStorage {
 
   async addSource(source: string): Promise<{ name: string }> {
     this.customSources.add(source);
+    this.saveData();
     return { name: source };
   }
 
@@ -145,6 +247,7 @@ export class MemStorage implements IStorage {
       }
     });
     
+    this.saveData();
     return { name: newSource };
   }
 
@@ -159,16 +262,23 @@ export class MemStorage implements IStorage {
       return false;
     }
     
+    let result = false;
     // Delete from custom sources
     if (this.customSources.has(source)) {
-      return this.customSources.delete(source);
+      result = this.customSources.delete(source);
+    } else {
+      // For built-in sources, we add to a "deleted" list
+      // (this is a workaround since we can't remove from the enum)
+      this.customSources.add(`__deleted_${source}`);
+      result = true;
     }
     
-    // For built-in sources, we add to a "deleted" list
-    // (this is a workaround since we can't remove from the enum)
-    this.customSources.add(`__deleted_${source}`);
-    return true;
+    if (result) {
+      this.saveData();
+    }
+    return result;
   }
 }
 
-export const storage = new MemStorage();
+// Use the new FileStorage implementation
+export const storage = new FileStorage();

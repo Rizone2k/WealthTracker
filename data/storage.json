@@ -1,0 +1,41 @@
+{
+  "assets": [
+    {
+      "source": "Cash",
+      "amount": 32000000,
+      "description": "Physical cash at home",
+      "id": 1,
+      "updatedAt": "2025-04-30T19:11:12.511Z"
+    },
+    {
+      "source": "Savings Account",
+      "amount": 45000000,
+      "description": "Bank savings account",
+      "id": 2,
+      "updatedAt": "2025-04-30T19:11:12.511Z"
+    },
+    {
+      "source": "Investment Fund",
+      "amount": 23500000,
+      "description": "Mutual fund investment",
+      "id": 3,
+      "updatedAt": "2025-04-30T19:11:12.511Z"
+    },
+    {
+      "source": "Digital Wallet",
+      "amount": 12000000,
+      "description": "E-wallet",
+      "id": 4,
+      "updatedAt": "2025-04-30T19:11:12.511Z"
+    },
+    {
+      "source": "Stock Portfolio",
+      "amount": 8000000,
+      "description": "Stock investments",
+      "id": 5,
+      "updatedAt": "2025-04-30T19:11:12.511Z"
+    }
+  ],
+  "nextId": 6,
+  "customSources": []
+}
