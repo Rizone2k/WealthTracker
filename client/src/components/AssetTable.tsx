@@ -38,14 +38,17 @@ import {
   Globe,
   Car,
   LayoutGrid,
-  LayoutList
+  LayoutList,
+  Save,
+  X
 } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate, parseFormattedCurrency } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import AssetForm from "./AssetForm";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface AssetTableProps {
   assets: Asset[];
@@ -61,6 +64,9 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [assetToDelete, setAssetToDelete] = useState<Asset | null>(null);
   const [groupedView, setGroupedView] = useState(false);
+  const [inlineEditAsset, setInlineEditAsset] = useState<number | null>(null);
+  const [editAmount, setEditAmount] = useState("");
+  const [editDescription, setEditDescription] = useState("");
   
   // Check if assets contains merged assets with _originalAssets property
   const hasMergedAssets = assets.some((asset: any) => asset._originalAssets);
@@ -173,6 +179,50 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
       setAssetToDelete(null);
     }
   };
+  
+  const startInlineEdit = (asset: Asset) => {
+    setInlineEditAsset(asset.id);
+    setEditAmount(formatCurrency(asset.amount));
+    setEditDescription(asset.description || "");
+  };
+  
+  const cancelInlineEdit = () => {
+    setInlineEditAsset(null);
+    setEditAmount("");
+    setEditDescription("");
+  };
+  
+  const saveInlineEdit = async (asset: Asset) => {
+    try {
+      // Parse the formatted amount back to a number
+      const numericAmount = parseFormattedCurrency(editAmount);
+      
+      // Make API request to update the asset
+      await apiRequest("PATCH", `/api/assets/${asset.id}`, {
+        amount: numericAmount,
+        description: editDescription
+      });
+      
+      toast({
+        title: "Asset updated",
+        description: "Asset has been updated successfully",
+      });
+      
+      // Reset the inline edit state
+      setInlineEditAsset(null);
+      setEditAmount("");
+      setEditDescription("");
+      
+      // Refresh the assets
+      onAssetChange();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update asset",
+        variant: "destructive",
+      });
+    }
+  };
 
   const renderDetailedTable = () => (
     <Table>
@@ -210,41 +260,85 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
                   </div>
                 </TableCell>
                 <TableCell className="font-medium">
-                  {formatCurrency(asset.amount)}
+                  {inlineEditAsset === asset.id ? (
+                    <Input
+                      value={editAmount}
+                      onChange={(e) => setEditAmount(e.target.value)}
+                      className="w-28 text-sm"
+                    />
+                  ) : (
+                    formatCurrency(asset.amount)
+                  )}
                 </TableCell>
                 <TableCell className="text-gray-500">
                   {formatDate(asset.updatedAt)}
                 </TableCell>
                 <TableCell className="text-gray-500">
-                  {asset.description || "-"}
+                  {inlineEditAsset === asset.id ? (
+                    <Input
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      className="w-full text-sm"
+                      placeholder="Add description..."
+                    />
+                  ) : (
+                    asset.description || "-"
+                  )}
                 </TableCell>
                 <TableCell>
-                  <div className="flex space-x-2">
-                    {!isMerged ? (
-                      <>
+                  {inlineEditAsset === asset.id ? (
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => saveInlineEdit(asset)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Save className="h-4 w-4 text-green-500 hover:text-green-600" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={cancelInlineEdit}
+                        className="h-8 w-8 p-0"
+                      >
+                        <X className="h-4 w-4 text-red-500 hover:text-red-600" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex space-x-2">
+                      {!isMerged ? (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEditClick(asset)}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Pencil className="h-4 w-4 text-gray-500 hover:text-blue-500" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteClick(asset)}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Trash className="h-4 w-4 text-gray-500 hover:text-red-500" />
+                          </Button>
+                        </>
+                      ) : (
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleEditClick(asset)}
-                          className="h-8 w-8 p-0"
+                          onClick={() => startInlineEdit(asset)}
+                          className="h-8 px-2 py-0 text-xs"
                         >
-                          <Pencil className="h-4 w-4 text-gray-500 hover:text-blue-500" />
+                          <Pencil className="h-3 w-3 mr-1" />
+                          Quick Edit
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteClick(asset)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Trash className="h-4 w-4 text-gray-500 hover:text-red-500" />
-                        </Button>
-                      </>
-                    ) : (
-                      <span className="text-xs text-gray-500 italic px-2">
-                        Edit individual entries in settings
-                      </span>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  )}
                 </TableCell>
               </TableRow>
             );
