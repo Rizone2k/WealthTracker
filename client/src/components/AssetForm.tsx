@@ -204,12 +204,15 @@ export default function AssetForm({
                         <div className="p-2 text-center text-gray-500">Loading sources...</div>
                       ) : (
                         <>
-                          {availableSources.map((source) => (
-                            <SelectItem key={source} value={source}>
-                              {source}
-                            </SelectItem>
-                          ))}
-                          <SelectItem value="Other">Other</SelectItem>
+                          {availableSources
+                            .filter(source => source !== "Other") // Filter out "Other" from sources
+                            .map((source) => (
+                              <SelectItem key={source} value={source}>
+                                {source}
+                              </SelectItem>
+                            ))}
+                          {/* Always add "Other" option at the end */}
+                          <SelectItem key="other-option" value="Other">Other</SelectItem>
                         </>
                       )}
                     </SelectContent>
