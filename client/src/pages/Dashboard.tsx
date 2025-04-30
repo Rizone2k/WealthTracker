@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,19 +17,37 @@ export default function Dashboard() {
   const queryClient = useQueryClient();
   const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
 
-  const { data: assets = [], isLoading, error } = useQuery<Asset[]>({
+  // Fetch assets data
+  const { data: assets = [], isLoading: assetsLoading, error: assetsError } = useQuery<Asset[]>({
     queryKey: ["/api/assets"],
   });
+  
+  // Fetch sources data
+  const { data: sources = [], isLoading: sourcesLoading } = useQuery<string[]>({
+    queryKey: ["/api/sources"],
+  });
+  
+  // Combined loading state
+  const isLoading = assetsLoading || sourcesLoading;
 
   const handleAddAssetClick = () => {
+    // Force refresh sources before opening the form
+    queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
     setIsAddAssetModalOpen(true);
   };
 
   const handleAssetChange = () => {
+    // Invalidate both assets and sources
     queryClient.invalidateQueries({ queryKey: ["/api/assets"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
   };
+  
+  // Effect to refresh sources data when component mounts or when needed
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
+  }, [queryClient]);
 
-  if (error) {
+  if (assetsError) {
     toast({
       title: "Error",
       description: "Failed to load assets",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,6 +56,30 @@ export default function AssetForm({
 }: AssetFormProps) {
   const { toast } = useToast();
   const [showOtherInput, setShowOtherInput] = useState(false);
+  const [availableSources, setAvailableSources] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch available sources when component mounts
+  useEffect(() => {
+    const fetchSources = async () => {
+      setIsLoading(true);
+      try {
+        const sources = await apiRequest<string[]>("GET", "/api/sources");
+        setAvailableSources(sources);
+      } catch (error) {
+        console.error("Failed to fetch sources:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch available sources",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSources();
+  }, [toast]);
   
   const defaultValues = editAsset
     ? {
@@ -167,18 +191,18 @@ export default function AssetForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="max-h-64 overflow-auto">
-                      <SelectItem value="Cash">Cash</SelectItem>
-                      <SelectItem value="Savings Account">Savings Account</SelectItem>
-                      <SelectItem value="Investment Fund">Investment Fund</SelectItem>
-                      <SelectItem value="Digital Wallet">Digital Wallet</SelectItem>
-                      <SelectItem value="Stock Portfolio">Stock Portfolio</SelectItem>
-                      <SelectItem value="Real Estate">Real Estate</SelectItem>
-                      <SelectItem value="Gold & Jewelry">Gold & Jewelry</SelectItem>
-                      <SelectItem value="Cryptocurrency">Cryptocurrency</SelectItem>
-                      <SelectItem value="Bonds">Bonds</SelectItem>
-                      <SelectItem value="Foreign Currency">Foreign Currency</SelectItem>
-                      <SelectItem value="Vehicle">Vehicle</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
+                      {isLoading ? (
+                        <div className="p-2 text-center text-gray-500">Loading sources...</div>
+                      ) : (
+                        <>
+                          {availableSources.map((source) => (
+                            <SelectItem key={source} value={source}>
+                              {source}
+                            </SelectItem>
+                          ))}
+                          <SelectItem value="Other">Other</SelectItem>
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Asset } from "@shared/schema";
 import { 
   Table, 
@@ -55,6 +55,15 @@ export default function AssetTable({ assets, onAssetChange }: AssetTableProps) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [assetToDelete, setAssetToDelete] = useState<Asset | null>(null);
+  
+  // Refresh sources when assets change
+  useEffect(() => {
+    // Reset form when assets change to ensure it gets the latest sources
+    if (isFormOpen) {
+      setIsFormOpen(false);
+      setTimeout(() => setIsFormOpen(true), 100);
+    }
+  }, [assets]);
 
   const filteredAssets = assets.filter((asset) =>
     asset.source.toLowerCase().includes(searchTerm.toLowerCase()) ||
