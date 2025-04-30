@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,42 @@ export default function Dashboard() {
   
   // Combined loading state
   const isLoading = assetsLoading || sourcesLoading;
+  
+  // Create merged assets by combining amounts for the same source
+  const mergedAssets = useMemo(() => {
+    if (!assets.length) return [];
+    
+    // Group by source
+    const groupedBySource = assets.reduce((acc, asset) => {
+      if (!acc[asset.source]) {
+        acc[asset.source] = {
+          id: -1 * (Object.keys(acc).length + 1), // Use negative numbers for merged assets
+          source: asset.source,
+          amount: 0,
+          description: `Combined ${asset.source} assets`,
+          createdAt: new Date(),
+          updatedAt: new Date(0),
+          originalAssets: []
+        };
+      }
+      
+      // Add amount
+      acc[asset.source].amount += asset.amount;
+      
+      // Track the latest update
+      const assetDate = new Date(asset.updatedAt);
+      if (assetDate > new Date(acc[asset.source].updatedAt)) {
+        acc[asset.source].updatedAt = asset.updatedAt;
+      }
+      
+      // Keep track of original assets
+      acc[asset.source].originalAssets.push(asset);
+      
+      return acc;
+    }, {} as Record<string, Asset & { originalAssets: Asset[] }>);
+    
+    return Object.values(groupedBySource);
+  }, [assets]);
 
   const handleAddAssetClick = () => {
     // Force refresh sources before opening the form
@@ -150,7 +186,7 @@ export default function Dashboard() {
         </div>
       ) : (
         <AssetTable 
-          assets={assets} 
+          assets={mergedAssets} 
           onAssetChange={handleAssetChange}
           sources={sources}
         />
