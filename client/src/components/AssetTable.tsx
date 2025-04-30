@@ -62,6 +62,9 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
   const [assetToDelete, setAssetToDelete] = useState<Asset | null>(null);
   const [groupedView, setGroupedView] = useState(false);
   
+  // Check if assets contains merged assets with _originalAssets property
+  const hasMergedAssets = assets.some((asset: any) => asset._originalAssets);
+  
   // Refresh sources when assets change
   useEffect(() => {
     // Reset form when assets change to ensure it gets the latest sources
@@ -184,47 +187,68 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
       </TableHeader>
       <TableBody>
         {filteredAssets.length > 0 ? (
-          filteredAssets.map((asset) => (
-            <TableRow key={asset.id} className="hover:bg-gray-50">
-              <TableCell>
-                <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                    {getAssetIcon(asset.source)}
+          filteredAssets.map((asset) => {
+            // Check if this is a merged asset
+            const isMerged = (asset as any)._originalAssets;
+            const assetCount = isMerged ? (asset as any)._originalAssets.length : 1;
+            
+            return (
+              <TableRow key={asset.id} className={`hover:bg-gray-50 ${isMerged ? 'bg-blue-50/30' : ''}`}>
+                <TableCell>
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                      {getAssetIcon(asset.source)}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-900">{asset.source}</span>
+                      {isMerged && (
+                        <div className="text-xs text-blue-600 font-medium">
+                          Combined from {assetCount} entries
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <span className="font-medium text-gray-900">{asset.source}</span>
-                </div>
-              </TableCell>
-              <TableCell className="font-medium">
-                {formatCurrency(asset.amount)}
-              </TableCell>
-              <TableCell className="text-gray-500">
-                {formatDate(asset.updatedAt)}
-              </TableCell>
-              <TableCell className="text-gray-500">
-                {asset.description || "-"}
-              </TableCell>
-              <TableCell>
-                <div className="flex space-x-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleEditClick(asset)}
-                    className="h-8 w-8 p-0"
-                  >
-                    <Pencil className="h-4 w-4 text-gray-500 hover:text-blue-500" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDeleteClick(asset)}
-                    className="h-8 w-8 p-0"
-                  >
-                    <Trash className="h-4 w-4 text-gray-500 hover:text-red-500" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))
+                </TableCell>
+                <TableCell className="font-medium">
+                  {formatCurrency(asset.amount)}
+                </TableCell>
+                <TableCell className="text-gray-500">
+                  {formatDate(asset.updatedAt)}
+                </TableCell>
+                <TableCell className="text-gray-500">
+                  {asset.description || "-"}
+                </TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    {!isMerged ? (
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEditClick(asset)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Pencil className="h-4 w-4 text-gray-500 hover:text-blue-500" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteClick(asset)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Trash className="h-4 w-4 text-gray-500 hover:text-red-500" />
+                        </Button>
+                      </>
+                    ) : (
+                      <span className="text-xs text-gray-500 italic px-2">
+                        Edit individual entries in settings
+                      </span>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })
         ) : (
           <TableRow>
             <TableCell colSpan={5} className="text-center py-6 text-gray-500">

@@ -41,10 +41,9 @@ export default function Dashboard() {
           id: -1 * (Object.keys(acc).length + 1), // Use negative numbers for merged assets
           source: asset.source,
           amount: 0,
-          description: `Combined ${asset.source} assets`,
-          createdAt: new Date(),
+          description: asset.description || `Combined ${asset.source} assets`,
           updatedAt: new Date(0),
-          originalAssets: []
+          _originalAssets: [] // Private field to store original assets
         };
       }
       
@@ -58,10 +57,10 @@ export default function Dashboard() {
       }
       
       // Keep track of original assets
-      acc[asset.source].originalAssets.push(asset);
+      acc[asset.source]._originalAssets.push(asset);
       
       return acc;
-    }, {} as Record<string, Asset & { originalAssets: Asset[] }>);
+    }, {} as Record<string, Asset & { _originalAssets: Asset[] }>);
     
     return Object.values(groupedBySource);
   }, [assets]);
