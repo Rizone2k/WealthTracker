@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertAssetSchema, updateAssetSchema } from "@shared/schema";
+import { insertAssetSchema, updateAssetSchema, type Asset } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
@@ -135,6 +135,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 const updatePromises = assetsWithSource.map(async (asset) => {
                   const newAmount = Math.round(asset.amount * ratio);
                   await storage.updateAsset(asset.id, { 
+                    source: asset.source, // Preserve the existing source
                     amount: newAmount,
                     description: req.body.description !== undefined ? req.body.description : asset.description
                   });
@@ -145,6 +146,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 // If only description changed, update all assets with the new description
                 const updatePromises = assetsWithSource.map(async (asset) => {
                   await storage.updateAsset(asset.id, { 
+                    source: asset.source,
+                    amount: asset.amount,
                     description: req.body.description 
                   });
                 });
