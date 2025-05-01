@@ -34,8 +34,31 @@
       "description": "SSSSSStock investments",
       "id": 5,
       "updatedAt": "2025-05-01T16:14:35.672Z"
+    },
+    {
+      "source": "AAAAAA",
+      "amount": 99999,
+      "description": "oke",
+      "id": 6,
+      "updatedAt": "2025-05-01T17:39:57.627Z"
+    },
+    {
+      "source": "AAAAAA",
+      "amount": 1,
+      "description": "okee 1",
+      "id": 7,
+      "updatedAt": "2025-05-01T17:40:29.193Z"
+    },
+    {
+      "source": "AAAAAA",
+      "amount": 9999999,
+      "description": "oke9",
+      "id": 8,
+      "updatedAt": "2025-05-01T17:41:01.251Z"
     }
   ],
-  "nextId": 6,
-  "customSources": []
+  "nextId": 9,
+  "customSources": [
+    "AAAAAA"
+  ]
 }

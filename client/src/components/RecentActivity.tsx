@@ -17,28 +17,28 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
   // Take only the first 5 most recent assets
   const recentAssets = sortedAssets.slice(0, 5);
 
-  // Calculate money movements for each asset
+  // Determine activity type and amount for each asset
   // In a real application, this would come from a transaction history
-  // For now, we'll simulate it by comparing amounts based on asset age
+  // For now, we'll use the full amount of the asset
   const getMoneyMovement = (asset: Asset, index: number): number => {
-    // For demonstration purposes, we'll create a simulated movement
-    // In a real app, you'd have actual previous values stored in transaction history
-    // This returns a positive number for deposits, negative for withdrawals
+    // Uses the full asset amount to show the transaction value
+    // In the future, this would be replaced with actual transaction history data
     
+    // For the first asset (newest), we'll show it as a deposit
     if (index === 0) {
-      // Newest asset - simulate an update (could be deposit or withdrawal)
-      const amount = asset.amount * 0.1; // 10% of current amount
-      return index % 2 === 0 ? amount : -amount;
-    } else if (index === 1) {
-      // Second newest - simulate deposit
-      return asset.amount * 0.15; // 15% of current amount
-    } else if (index === 2) {
-      // Third newest - simulate withdrawal
-      return -asset.amount * 0.05; // 5% of current amount
-    } else {
-      // Fourth & fifth - alternate deposit/withdrawal
-      const amount = asset.amount * 0.08; // 8% of current amount
-      return index % 2 === 0 ? amount : -amount;
+      return asset.amount; // Full amount as deposit
+    } 
+    // For the second asset, also show as deposit
+    else if (index === 1) {
+      return asset.amount;
+    } 
+    // For the third asset, show as withdrawal
+    else if (index === 2) {
+      return -asset.amount;
+    } 
+    // For the rest, alternate between deposit and withdrawal
+    else {
+      return index % 2 === 0 ? asset.amount : -asset.amount;
     }
   };
 
