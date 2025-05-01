@@ -9,10 +9,10 @@
     },
     {
       "source": "Savings Account",
-      "amount": 45000000,
+      "amount": 5000000,
       "description": "Bank savings account",
       "id": 2,
-      "updatedAt": "2025-04-30T19:11:12.511Z"
+      "updatedAt": "2025-05-01T16:14:18.167Z"
     },
     {
       "source": "Investment Fund",
@@ -23,17 +23,17 @@
     },
     {
       "source": "Digital Wallet",
-      "amount": 12000000,
+      "amount": 120000000,
       "description": "E-wallet",
       "id": 4,
-      "updatedAt": "2025-04-30T19:11:12.511Z"
+      "updatedAt": "2025-05-01T16:14:28.482Z"
     },
     {
       "source": "Stock Portfolio",
       "amount": 8000000,
-      "description": "Stock investments",
+      "description": "SSSSSStock investments",
       "id": 5,
-      "updatedAt": "2025-04-30T19:11:12.511Z"
+      "updatedAt": "2025-05-01T16:14:35.672Z"
     }
   ],
   "nextId": 6,

@@ -1,6 +1,6 @@
 import { Asset } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Minus, Edit } from "lucide-react";
+import { Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -14,52 +14,74 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
     return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
   });
 
-  // Take only the first 4 most recent assets
-  const recentAssets = sortedAssets.slice(0, 4);
+  // Take only the first 5 most recent assets
+  const recentAssets = sortedAssets.slice(0, 5);
 
-  const getActivityIcon = (index: number) => {
-    // Just for simulation, we'll use different icons for demonstration
-    // In a real app, this would be based on the type of activity (add, remove, update)
-    if (index % 3 === 0) {
+  // Calculate money movements for each asset
+  // In a real application, this would come from a transaction history
+  // For now, we'll simulate it by comparing amounts based on asset age
+  const getMoneyMovement = (asset: Asset, index: number): number => {
+    // For demonstration purposes, we'll create a simulated movement
+    // In a real app, you'd have actual previous values stored in transaction history
+    // This returns a positive number for deposits, negative for withdrawals
+    
+    if (index === 0) {
+      // Newest asset - simulate an update (could be deposit or withdrawal)
+      const amount = asset.amount * 0.1; // 10% of current amount
+      return index % 2 === 0 ? amount : -amount;
+    } else if (index === 1) {
+      // Second newest - simulate deposit
+      return asset.amount * 0.15; // 15% of current amount
+    } else if (index === 2) {
+      // Third newest - simulate withdrawal
+      return -asset.amount * 0.05; // 5% of current amount
+    } else {
+      // Fourth & fifth - alternate deposit/withdrawal
+      const amount = asset.amount * 0.08; // 8% of current amount
+      return index % 2 === 0 ? amount : -amount;
+    }
+  };
+
+  const getActivityIcon = (movement: number) => {
+    if (movement > 0) {
+      return (
+        <div className="bg-green-100 rounded-full p-2 mr-3">
+          <TrendingUp className="h-4 w-4 text-green-500" />
+        </div>
+      );
+    } else if (movement < 0) {
+      return (
+        <div className="bg-red-100 rounded-full p-2 mr-3">
+          <TrendingDown className="h-4 w-4 text-red-500" />
+        </div>
+      );
+    } else {
       return (
         <div className="bg-blue-100 rounded-full p-2 mr-3">
           <Plus className="h-4 w-4 text-blue-500" />
         </div>
       );
-    } else if (index % 3 === 1) {
-      return (
-        <div className="bg-red-100 rounded-full p-2 mr-3">
-          <Minus className="h-4 w-4 text-red-500" />
-        </div>
-      );
-    } else {
-      return (
-        <div className="bg-indigo-100 rounded-full p-2 mr-3">
-          <Edit className="h-4 w-4 text-indigo-500" />
-        </div>
-      );
     }
   };
 
-  const getActivityDescription = (index: number, asset: Asset) => {
-    // For demonstration purposes
-    if (index % 3 === 0) {
-      return `Added to ${asset.source}`;
-    } else if (index % 3 === 1) {
-      return `Removed from ${asset.source}`;
+  const getActivityDescription = (movement: number, asset: Asset) => {
+    if (movement > 0) {
+      return `Thêm tiền vào ${asset.source}`;
+    } else if (movement < 0) {
+      return `Rút tiền từ ${asset.source}`;
     } else {
-      return `Updated ${asset.source}`;
+      return `Cập nhật ${asset.source}`;
     }
   };
 
-  const getActivityAmount = (index: number, asset: Asset) => {
-    if (index % 3 === 0) {
+  const getActivityAmount = (movement: number) => {
+    if (movement > 0) {
       return (
-        <p className="text-sm font-medium text-green-500">+{formatCurrency(asset.amount)}</p>
+        <p className="text-sm font-medium text-green-500">+{formatCurrency(movement)}</p>
       );
-    } else if (index % 3 === 1) {
+    } else if (movement < 0) {
       return (
-        <p className="text-sm font-medium text-red-500">-{formatCurrency(asset.amount / 4)}</p>
+        <p className="text-sm font-medium text-red-500">{formatCurrency(movement)}</p>
       );
     } else {
       return (
@@ -79,23 +101,26 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
       <CardContent>
         <div className="space-y-4">
           {recentAssets.length > 0 ? (
-            recentAssets.map((asset, index) => (
-              <div key={asset.id} className="flex items-start">
-                {getActivityIcon(index)}
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">
-                    {getActivityDescription(index, asset)}
-                  </p>
-                  {asset.description && (
-                    <p className="text-xs text-gray-600 italic">
-                      "{asset.description}"
+            recentAssets.map((asset, index) => {
+              const movement = getMoneyMovement(asset, index);
+              return (
+                <div key={asset.id} className="flex items-start">
+                  {getActivityIcon(movement)}
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-900">
+                      {getActivityDescription(movement, asset)}
                     </p>
-                  )}
-                  <p className="text-xs text-gray-500">{formatDate(asset.updatedAt)}</p>
+                    {asset.description && (
+                      <p className="text-xs text-gray-600 italic">
+                        "{asset.description}"
+                      </p>
+                    )}
+                    <p className="text-xs text-gray-500">{formatDate(asset.updatedAt)}</p>
+                  </div>
+                  {getActivityAmount(movement)}
                 </div>
-                {getActivityAmount(index, asset)}
-              </div>
-            ))
+              );
+            })
           ) : (
             <p className="text-sm text-gray-500 py-4 text-center">
               No recent activity to display
