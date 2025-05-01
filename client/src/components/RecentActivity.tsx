@@ -66,11 +66,11 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
 
   const getActivityDescription = (movement: number, asset: Asset) => {
     if (movement > 0) {
-      return `Thêm tiền vào ${asset.source}`;
+      return `Added to ${asset.source}`;
     } else if (movement < 0) {
-      return `Rút tiền từ ${asset.source}`;
+      return `Withdrawn from ${asset.source}`;
     } else {
-      return `Cập nhật ${asset.source}`;
+      return `Updated ${asset.source}`;
     }
   };
 
