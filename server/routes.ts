@@ -93,31 +93,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // For now, our frontend uses negative IDs where -1 is the first source, -2 is the second, etc.
           // So we need to get the proper source name
           
-          // Group assets by source to get an array of unique sources in the same order as frontend
-          const sourceGroups = allAssets.reduce((groups, asset) => {
+          // Group assets by source 
+          const sourceGroups = allAssets.reduce((groups: Record<string, Asset[]>, asset: Asset) => {
             if (!groups[asset.source]) {
               groups[asset.source] = [];
             }
             groups[asset.source].push(asset);
             return groups;
-          }, {} as Record<string, Asset[]>);
+          }, {});
           
-          // Convert to array and sort by total amount (highest first) to match frontend ordering
-          const groupedSources = Object.entries(sourceGroups)
-            .map(([source, assets]) => ({
-              source,
-              totalAmount: assets.reduce((sum, asset) => sum + asset.amount, 0),
-              assets
-            }))
-            .sort((a, b) => b.totalAmount - a.totalAmount);
+          // Get unique sources in exactly the same order they're processed in the frontend
+          // This is critical as the frontend assigns negative IDs based on iteration order
+          const uniqueSources = Object.keys(sourceGroups);
           
           // Now we can get the correct source based on the negative ID
           // -1 means first source, -2 means second source, etc.
           const sourceIndex = Math.abs(id) - 1;
           
-          if (sourceIndex >= 0 && sourceIndex < groupedSources.length) {
-            const sourceGroup = groupedSources[sourceIndex];
-            const source = sourceGroup.source;
+          if (sourceIndex >= 0 && sourceIndex < uniqueSources.length) {
+            const source = uniqueSources[sourceIndex];
             
             // Get the assets with this source
             const assetsWithSource = allAssets.filter(asset => asset.source === source);
@@ -125,7 +119,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // If there's an amount change, distribute it proportionally
             if (req.body.amount !== undefined) {
               const newTotalAmount = req.body.amount;
-              const currentTotalAmount = assetsWithSource.reduce((sum, asset) => sum + asset.amount, 0);
+              const currentTotalAmount = assetsWithSource.reduce((sum: number, asset: Asset) => sum + asset.amount, 0);
               
               // Only update if the amount changed
               if (newTotalAmount !== currentTotalAmount) {
