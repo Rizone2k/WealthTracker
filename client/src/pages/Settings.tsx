@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Layout from "@/components/Layout";
 import {
   Card,
@@ -7,132 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { X, Pencil, Check, Plus } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
-import { AssetSource } from "@shared/schema";
-
-interface SourceResponse {
-  name: string;
-}
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 
 export default function Settings() {
-  const { toast } = useToast();
-  const [sources, setSources] = useState<string[]>([]);
-  const [newSource, setNewSource] = useState("");
-  const [editingSource, setEditingSource] = useState<{ index: number; value: string } | null>(null);
-  
-  // No longer checking for default sources, as all sources are now editable and deletable
-
-  useEffect(() => {
-    // Fetch sources from the API
-    const fetchSources = async () => {
-      try {
-        const response = await apiRequest("GET", "/api/sources");
-        if (Array.isArray(response)) {
-          setSources(response);
-        }
-      } catch (error) {
-        console.error("Failed to fetch sources:", error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch asset sources",
-          variant: "destructive",
-        });
-      }
-    };
-
-    fetchSources();
-  }, [toast]);
-
-  const handleAddSource = async () => {
-    if (!newSource.trim()) return;
-
-    try {
-      const response = await apiRequest<{ name: string }>("POST", "/api/sources", { name: newSource });
-      setSources([...sources, response.name]);
-      setNewSource("");
-      toast({
-        title: "Success",
-        description: "Asset source added successfully",
-      });
-    } catch (error) {
-      console.error("Failed to add source:", error);
-      toast({
-        title: "Error",
-        description: "Failed to add asset source",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleEditSource = (index: number) => {
-    const source = sources[index];
-    setEditingSource({ index, value: source });
-  };
-
-  const handleUpdateSource = async () => {
-    if (!editingSource || !editingSource.value.trim()) return;
-
-    try {
-      const oldSource = sources[editingSource.index];
-      const response = await apiRequest<{ name: string }>("PUT", `/api/sources/${oldSource}`, {
-        name: editingSource.value,
-      });
-
-      const updatedSources = [...sources];
-      updatedSources[editingSource.index] = response.name;
-      setSources(updatedSources);
-      setEditingSource(null);
-
-      toast({
-        title: "Success",
-        description: "Asset source updated successfully",
-      });
-    } catch (error) {
-      console.error("Failed to update source:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update asset source",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleDeleteSource = async (index: number) => {
-    const sourceToDelete = sources[index];
-
-    try {
-      await apiRequest("DELETE", `/api/sources/${sourceToDelete}`);
-      
-      const updatedSources = [...sources];
-      updatedSources.splice(index, 1);
-      setSources(updatedSources);
-
-      toast({
-        title: "Success",
-        description: "Asset source deleted successfully",
-      });
-    } catch (error) {
-      console.error("Failed to delete source:", error);
-      toast({
-        title: "Error",
-        description: "Failed to delete asset source. It may be in use by existing assets.",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <Layout>
       <div className="space-y-6">
@@ -143,106 +22,59 @@ export default function Settings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Asset Sources</CardTitle>
+            <CardTitle>Appearance</CardTitle>
             <CardDescription>
-              Manage the types of asset sources you can use in the application
+              Customize how the application looks
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="flex gap-2 mb-4">
-              <Input
-                placeholder="Enter new source name"
-                value={newSource}
-                onChange={(e) => setNewSource(e.target.value)}
-              />
-              <Button onClick={handleAddSource}>
-                <Plus className="mr-2 h-4 w-4" />
-                Add Source
-              </Button>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="dark-mode">Dark Mode</Label>
+                <p className="text-sm text-gray-500">
+                  Switch between light and dark mode
+                </p>
+              </div>
+              <Switch id="dark-mode" />
             </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="font-size">Font Size</Label>
+                <span className="text-sm text-gray-500">14px</span>
+              </div>
+              <Slider defaultValue={[14]} max={20} min={10} step={1} />
+            </div>
+          </CardContent>
+        </Card>
 
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Source Name</TableHead>
-                  <TableHead className="w-[150px]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sources.map((source, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      {editingSource?.index === index ? (
-                        <Input
-                          value={editingSource.value}
-                          onChange={(e) =>
-                            setEditingSource({
-                              ...editingSource,
-                              value: e.target.value,
-                            })
-                          }
-                          className="max-w-xs"
-                        />
-                      ) : (
-                        <div className="flex items-center">
-                          {source}
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex space-x-2">
-                        {editingSource?.index === index ? (
-                          <>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={handleUpdateSource}
-                              className="h-8 w-8 p-0"
-                            >
-                              <Check className="h-4 w-4 text-green-500" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setEditingSource(null)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <X className="h-4 w-4 text-red-500" />
-                            </Button>
-                          </>
-                        ) : (
-                          <>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleEditSource(index)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <Pencil className="h-4 w-4 text-gray-500 hover:text-blue-500" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDeleteSource(index)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <X className="h-4 w-4 text-gray-500 hover:text-red-500" />
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {sources.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={2} className="text-center py-6 text-gray-500">
-                      No custom sources added yet.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+        <Card>
+          <CardHeader>
+            <CardTitle>Currency Display</CardTitle>
+            <CardDescription>
+              Configure how monetary values are displayed
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="show-decimals">Show Decimals</Label>
+                <p className="text-sm text-gray-500">
+                  Display decimal places in currency values
+                </p>
+              </div>
+              <Switch id="show-decimals" defaultChecked />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="show-currency-symbol">Show Currency Symbol</Label>
+                <p className="text-sm text-gray-500">
+                  Display currency symbol (₫) before values
+                </p>
+              </div>
+              <Switch id="show-currency-symbol" defaultChecked />
+            </div>
           </CardContent>
         </Card>
       </div>

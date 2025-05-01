@@ -162,7 +162,9 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
     if (!assetToDelete) return;
     
     try {
-      await apiRequest("DELETE", `/api/assets/${assetToDelete.id}`);
+      await apiRequest(`/api/assets/${assetToDelete.id}`, {
+        method: "DELETE"
+      });
       toast({
         title: "Asset deleted",
         description: "Asset has been deleted successfully",
@@ -205,9 +207,13 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
         const originalAssets = (asset as any)._originalAssets;
         
         // If this is a merged asset, just update the merged asset ID (backend handles the logic)
-        await apiRequest("PATCH", `/api/assets/${asset.id}`, {
-          amount: numericAmount,
-          description: editDescription
+        await apiRequest(`/api/assets/${asset.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: numericAmount,
+            description: editDescription
+          })
         });
         
         toast({
@@ -216,9 +222,13 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
         });
       } else {
         // For regular assets, update normally
-        await apiRequest("PATCH", `/api/assets/${asset.id}`, {
-          amount: numericAmount,
-          description: editDescription
+        await apiRequest(`/api/assets/${asset.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: numericAmount,
+            description: editDescription
+          })
         });
         
         toast({

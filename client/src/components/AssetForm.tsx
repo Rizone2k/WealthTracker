@@ -125,13 +125,21 @@ export default function AssetForm({
       };
 
       if (editAsset) {
-        await apiRequest("PUT", `/api/assets/${editAsset.id}`, assetData);
+        await apiRequest(`/api/assets/${editAsset.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(assetData)
+        });
         toast({
           title: "Asset updated",
           description: "Your asset has been updated successfully",
         });
       } else {
-        await apiRequest("POST", "/api/assets", assetData);
+        await apiRequest("/api/assets", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(assetData)
+        });
         toast({
           title: "Asset added",
           description: "Your asset has been added successfully",
