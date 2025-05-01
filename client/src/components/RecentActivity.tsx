@@ -21,24 +21,16 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
   // In a real application, this would come from a transaction history
   // For now, we'll use the full amount of the asset
   const getMoneyMovement = (asset: Asset, index: number): number => {
-    // Uses the full asset amount to show the transaction value
-    // In the future, this would be replaced with actual transaction history data
+    // Group all assets into two categories: deposits (positive) and withdrawals (negative)
+    // Place all deposits at the top, withdrawals at the bottom
     
-    // For the first asset (newest), we'll show it as a deposit
-    if (index === 0) {
-      return asset.amount; // Full amount as deposit
-    } 
-    // For the second asset, also show as deposit
-    else if (index === 1) {
-      return asset.amount;
-    } 
-    // For the third asset, show as withdrawal
-    else if (index === 2) {
-      return -asset.amount;
-    } 
-    // For the rest, alternate between deposit and withdrawal
-    else {
-      return index % 2 === 0 ? asset.amount : -asset.amount;
+    // For most assets, show them as deposits (positive movement)
+    // Only show the last asset as a withdrawal (for UI demonstration purposes)
+    if (index < recentAssets.length - 1) {
+      return asset.amount; // Positive value (deposit/addition)
+    } else {
+      // Last item is shown as withdrawal
+      return -asset.amount; // Negative value (withdrawal)
     }
   };
 
