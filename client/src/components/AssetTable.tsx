@@ -445,7 +445,7 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
             </div>
           </div>
           <div className="flex items-center w-full md:w-auto">
-            <div className="relative w-full md:w-auto mr-2">
+            <div className="relative w-full md:w-auto">
               <Input
                 type="text"
                 placeholder="Search assets..."
@@ -455,17 +455,6 @@ export default function AssetTable({ assets, onAssetChange, sources = [] }: Asse
               />
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             </div>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => {
-                setEditAsset(undefined);
-                setIsFormOpen(true);
-              }}
-              className="gap-1"
-            >
-              <Pencil className="h-4 w-4" /> Add
-            </Button>
           </div>
         </div>
 
