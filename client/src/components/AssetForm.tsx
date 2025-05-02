@@ -72,7 +72,7 @@ export default function AssetForm({
       const fetchSources = async () => {
         setIsLoading(true);
         try {
-          const sources = await apiRequest<string[]>("GET", "/api/sources");
+          const sources = await apiRequest<string[]>("/api/sources");
           setAvailableSources(sources);
         } catch (error) {
           console.error("Failed to fetch sources:", error);
