@@ -8,7 +8,8 @@ import {
   Settings, 
   User, 
   Menu, 
-  Plus
+  Plus,
+  LineChart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -37,6 +38,11 @@ export default function Layout({ children, onAddAsset }: LayoutProps) {
       name: "Assets", 
       href: "/assets", 
       icon: <Wallet className="mr-3 h-5 w-5" /> 
+    },
+    { 
+      name: "Tracking", 
+      href: "/tracking", 
+      icon: <LineChart className="mr-3 h-5 w-5" /> 
     },
     { 
       name: "History", 
@@ -90,7 +96,7 @@ export default function Layout({ children, onAddAsset }: LayoutProps) {
           </div>
         </div>
       </aside>
-      
+
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-screen">
         {/* Top Navigation (mobile) */}
