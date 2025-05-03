@@ -148,9 +148,12 @@ export class FileStorage implements IStorage {
     const now = new Date();
     // Ensure description is null if it's undefined
     const description = insertAsset.description === undefined ? null : insertAsset.description;
+    // Ensure month is a valid date
+    const month = new Date(insertAsset.month);
     const asset: Asset = { 
       ...insertAsset, 
-      description, 
+      description,
+      month, 
       id, 
       updatedAt: now 
     };
