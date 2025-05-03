@@ -125,14 +125,31 @@
       "description": "Test 02",
       "id": 18,
       "updatedAt": "2025-05-03T17:35:48.981Z"
+    },
+    {
+      "source": "MOMO",
+      "amount": 999999,
+      "description": "test 02",
+      "month": "2025-04-14T17:00:00.000Z",
+      "id": 19,
+      "updatedAt": "2025-05-03T17:46:04.824Z"
+    },
+    {
+      "source": "Asset 02",
+      "amount": 999999,
+      "description": "test 03",
+      "month": "2025-04-14T17:00:00.000Z",
+      "id": 20,
+      "updatedAt": "2025-05-03T17:47:05.073Z"
     }
   ],
-  "nextId": 19,
+  "nextId": 21,
   "customSources": [
     "AAAAAA",
     "BBBB",
     "CCCC",
     "MOMO",
-    "Asset 01"
+    "Asset 01",
+    "Asset 02"
   ]
 }
