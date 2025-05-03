@@ -38,7 +38,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/assets", async (req, res) => {
     try {
-      const newAsset = insertAssetSchema.parse(req.body);
+      const newAsset = insertAssetSchema.parse({
+        ...req.body,
+        month: new Date(req.body.month) // Convert month string to Date object
+      });
       const asset = await storage.createAsset(newAsset);
       res.status(201).json(asset);
     } catch (error) {
