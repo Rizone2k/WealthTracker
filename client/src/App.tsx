@@ -7,12 +7,14 @@ import Dashboard from "@/pages/Dashboard";
 import Assets from "@/pages/Assets";
 import Settings from "@/pages/Settings";
 import NotFound from "@/pages/not-found";
+import Tracking from './pages/Tracking'; // Added import for Tracking component
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
       <Route path="/assets" component={Assets} />
+      <Route path="/tracking" component={Tracking} /> {/* Added route for Tracking */}
       <Route path="/history" component={Dashboard} />
       <Route path="/settings" component={Settings} />
       <Route component={NotFound} />

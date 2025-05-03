@@ -41,7 +41,30 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
         beginAtZero: true,
         ticks: {
           callback: (value: number) => formatCurrency(value)
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+          drawBorder: false
         }
+      },
+      x: {
+        grid: {
+          display: false
+        }
+      }
+    },
+    elements: {
+      line: {
+        tension: 0.4, // Makes the line smooth
+        borderWidth: 2,
+        fill: 'start',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)' // Light blue background
+      },
+      point: {
+        radius: 4,
+        hitRadius: 10,
+        hoverRadius: 6,
+        backgroundColor: '#3B82F6'
       }
     },
     plugins: {

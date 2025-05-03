@@ -168,9 +168,6 @@ export default function Dashboard() {
                 assets={assets} 
                 onAddClick={handleAddAssetClick} 
               />
-              <div className="mt-6">
-                <AssetTracking assets={assets} />
-              </div>
             </div>
             <RecentActivity assets={assets} />
           </>
