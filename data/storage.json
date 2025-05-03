@@ -2,154 +2,69 @@
   "assets": [
     {
       "source": "Cash",
-      "amount": 4000000,
-      "description": "Bank savings account",
+      "amount": 40000000,
+      "description": "Tiền mặt",
+      "month": "2024-01-01T00:00:00.000Z",
       "id": 1,
-      "updatedAt": "2025-05-01T16:10:17.968Z"
+      "updatedAt": "2024-01-01T00:00:00.000Z"
     },
     {
       "source": "Savings Account",
-      "amount": 5000000,
-      "description": "Bank savings account",
+      "amount": 50000000,
+      "description": "Tài khoản tiết kiệm",
+      "month": "2024-01-01T00:00:00.000Z",
       "id": 2,
-      "updatedAt": "2025-05-01T16:14:18.167Z"
+      "updatedAt": "2024-01-01T00:00:00.000Z"
     },
     {
       "source": "Investment Fund",
-      "amount": 23500000,
-      "description": "Mutual fund investment",
+      "amount": 25000000,
+      "description": "Quỹ đầu tư",
+      "month": "2024-02-01T00:00:00.000Z",
       "id": 3,
-      "updatedAt": "2025-04-30T19:11:12.511Z"
+      "updatedAt": "2024-02-01T00:00:00.000Z"
     },
     {
       "source": "Digital Wallet",
-      "amount": 120000000,
-      "description": "E-wallet",
+      "amount": 15000000,
+      "description": "Ví điện tử",
+      "month": "2024-02-01T00:00:00.000Z",
       "id": 4,
-      "updatedAt": "2025-05-01T16:14:28.482Z"
+      "updatedAt": "2024-02-01T00:00:00.000Z"
     },
     {
       "source": "Stock Portfolio",
-      "amount": 8000000,
-      "description": "SSSSSStock investments",
+      "amount": 80000000,
+      "description": "Danh mục cổ phiếu",
+      "month": "2024-03-01T00:00:00.000Z",
       "id": 5,
-      "updatedAt": "2025-05-01T16:14:35.672Z"
-    },
-    {
-      "source": "AAAAAA",
-      "amount": 99999,
-      "description": "oke",
-      "id": 6,
-      "updatedAt": "2025-05-01T17:39:57.627Z"
-    },
-    {
-      "source": "AAAAAA",
-      "amount": 1,
-      "description": "okee 1",
-      "id": 7,
-      "updatedAt": "2025-05-01T17:40:29.193Z"
-    },
-    {
-      "source": "AAAAAA",
-      "amount": 9999999,
-      "description": "oke9",
-      "id": 8,
-      "updatedAt": "2025-05-01T17:41:01.251Z"
-    },
-    {
-      "source": "BBBB",
-      "amount": 158,
-      "description": "oke2",
-      "id": 9,
-      "updatedAt": "2025-05-01T17:47:30.665Z"
-    },
-    {
-      "source": "BBBB",
-      "amount": 4730,
-      "description": "oke2",
-      "id": 10,
-      "updatedAt": "2025-05-01T17:47:30.665Z"
-    },
-    {
-      "source": "Stock Portfolio",
-      "amount": 999999,
-      "description": "ok",
-      "id": 11,
-      "updatedAt": "2025-05-01T17:50:17.100Z"
-    },
-    {
-      "source": "Cryptocurrency",
-      "amount": 32000000,
-      "description": "ok32",
-      "id": 12,
-      "updatedAt": "2025-05-01T17:50:35.278Z"
+      "updatedAt": "2024-03-01T00:00:00.000Z"
     },
     {
       "source": "Real Estate",
-      "amount": 11111,
-      "description": "ok",
-      "id": 13,
-      "updatedAt": "2025-05-01T17:53:39.910Z"
-    },
-    {
-      "source": "CCCC",
-      "amount": 19638000,
-      "description": "ok5",
-      "id": 14,
-      "updatedAt": "2025-05-01T18:07:05.558Z"
-    },
-    {
-      "source": "MOMO",
-      "amount": 999999,
-      "description": "Khoản tiền tích lũy ",
-      "id": 15,
-      "updatedAt": "2025-05-02T17:30:15.591Z"
-    },
-    {
-      "source": "MOMO",
-      "amount": 1,
-      "description": "bổ sung",
-      "id": 16,
-      "updatedAt": "2025-05-02T17:30:46.681Z"
+      "amount": 120000000,
+      "description": "Bất động sản",
+      "month": "2024-03-01T00:00:00.000Z",
+      "id": 6,
+      "updatedAt": "2024-03-01T00:00:00.000Z"
     },
     {
       "source": "Cash",
-      "amount": 9999999,
-      "description": "test 1",
-      "id": 17,
-      "updatedAt": "2025-05-03T17:33:46.995Z"
+      "amount": 45000000,
+      "description": "Tiền mặt tháng 4",
+      "month": "2024-04-01T00:00:00.000Z",
+      "id": 7,
+      "updatedAt": "2024-04-01T00:00:00.000Z"
     },
     {
-      "source": "Asset 01",
-      "amount": 999999,
-      "description": "Test 02",
-      "id": 18,
-      "updatedAt": "2025-05-03T17:35:48.981Z"
-    },
-    {
-      "source": "MOMO",
-      "amount": 999999,
-      "description": "test 02",
-      "month": "2025-04-14T17:00:00.000Z",
-      "id": 19,
-      "updatedAt": "2025-05-03T17:46:04.824Z"
-    },
-    {
-      "source": "Asset 02",
-      "amount": 999999,
-      "description": "test 03",
-      "month": "2025-04-14T17:00:00.000Z",
-      "id": 20,
-      "updatedAt": "2025-05-03T17:47:05.073Z"
+      "source": "Savings Account",
+      "amount": 55000000,
+      "description": "Tài khoản tiết kiệm tháng 4",
+      "month": "2024-04-01T00:00:00.000Z",
+      "id": 8,
+      "updatedAt": "2024-04-01T00:00:00.000Z"
     }
   ],
-  "nextId": 21,
-  "customSources": [
-    "AAAAAA",
-    "BBBB",
-    "CCCC",
-    "MOMO",
-    "Asset 01",
-    "Asset 02"
-  ]
+  "nextId": 9,
+  "customSources": []
 }
