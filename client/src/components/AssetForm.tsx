@@ -130,6 +130,7 @@ export default function AssetForm({
         source: finalSource,
         amount: amountValue,
         description: data.description,
+        month: data.month.toISOString(), // Convert Date to ISO string
       };
 
       if (editAsset) {
