@@ -52,7 +52,7 @@ const formSchema = insertAssetSchema.extend({
   amount: z.string().min(1, "Amount is required"),
   description: z.string().optional(),
   otherSource: z.string().optional(),
-  date: z.date(),
+  month: z.date(),
 });
 
 export default function AssetForm({
@@ -278,10 +278,10 @@ export default function AssetForm({
 
             <FormField
               control={form.control}
-              name="date"
+              name="month"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>Month</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>

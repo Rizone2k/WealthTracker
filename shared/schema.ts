@@ -7,8 +7,8 @@ export const assets = pgTable("assets", {
   source: text("source").notNull(),
   amount: integer("amount").notNull(),
   description: text("description"),
+  month: timestamp("month").notNull(), // Track which month this asset amount belongs to
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  date: timestamp("date").defaultNow(), // Added date field
 });
 
 export const insertAssetSchema = createInsertSchema(assets).omit({
