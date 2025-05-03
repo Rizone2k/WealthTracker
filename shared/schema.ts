@@ -8,6 +8,7 @@ export const assets = pgTable("assets", {
   amount: integer("amount").notNull(),
   description: text("description"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  date: timestamp("date").defaultNow(), // Added date field
 });
 
 export const insertAssetSchema = createInsertSchema(assets).omit({
