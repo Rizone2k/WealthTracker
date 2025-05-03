@@ -111,13 +111,28 @@
       "description": "bổ sung",
       "id": 16,
       "updatedAt": "2025-05-02T17:30:46.681Z"
+    },
+    {
+      "source": "Cash",
+      "amount": 9999999,
+      "description": "test 1",
+      "id": 17,
+      "updatedAt": "2025-05-03T17:33:46.995Z"
+    },
+    {
+      "source": "Asset 01",
+      "amount": 999999,
+      "description": "Test 02",
+      "id": 18,
+      "updatedAt": "2025-05-03T17:35:48.981Z"
     }
   ],
-  "nextId": 17,
+  "nextId": 19,
   "customSources": [
     "AAAAAA",
     "BBBB",
     "CCCC",
-    "MOMO"
+    "MOMO",
+    "Asset 01"
   ]
 }
