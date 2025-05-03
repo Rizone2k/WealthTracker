@@ -9,6 +9,7 @@ import AssetDistribution from "@/components/AssetDistribution";
 import RecentActivity from "@/components/RecentActivity";
 import AssetTable from "@/components/AssetTable";
 import AssetForm from "@/components/AssetForm";
+import AssetTracking from "@/components/AssetTracking";
 import { Asset } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -167,6 +168,9 @@ export default function Dashboard() {
                 assets={assets} 
                 onAddClick={handleAddAssetClick} 
               />
+              <div className="mt-6">
+                <AssetTracking assets={assets} />
+              </div>
             </div>
             <RecentActivity assets={assets} />
           </>
