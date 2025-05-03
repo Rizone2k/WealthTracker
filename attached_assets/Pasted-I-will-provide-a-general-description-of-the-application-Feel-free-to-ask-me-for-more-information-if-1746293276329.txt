@@ -1,0 +1,60 @@
+I will provide a general description of the application. Feel free to ask me for more information if needed. Please note that this is a planning document for the application — not all features have been implemented yet. Only a few functionalities have been completed, and many others still need to be created or revised to align with the intended outline.
+
+Application Description: “WealthTracker”
+Overview
+We are building a comprehensive personal asset tracking application that allows users to manage and visually monitor the distribution of their financial assets. This application is designed to help users track where their money is stored and observe the financial growth over time, with a monthly tracking cycle (default on the 15th of each month).
+
+Key Features
+Asset Source Management: Allows users to input and manage multiple types of assets (e.g., cash, bank accounts, investment funds, cryptocurrencies, etc.)
+
+Time-Based Tracking: Records asset changes on a monthly basis. The Tracking tab (currently not yet implemented) will feature a line chart (ideally using Chart.js to be consistent with the technology used in the Dashboard) to display monthly asset trends.
+
+Visual Dashboard: Provides a visual overview of assets using:
+
+Pie chart for asset distribution on the Dashboard
+
+Line chart for financial growth trends in the Tracking tab
+
+Automatic Grouping: Assets from the same source are automatically grouped together for aggregated display.
+
+Specific Functionalities
+Dashboard: Displays an overview and distribution of all assets.
+
+Assets Page: Manages details of each individual asset.
+
+Tracking Page: Tracks changes in assets over time using a line chart.
+
+Date Filters: Allows users to view assets and their distribution at specific time points.
+
+Add/Edit/Delete Assets: Includes support for custom asset sources.
+
+Technologies Used
+Frontend:
+
+React with TypeScript
+
+Chart.js for charts
+
+Tailwind CSS and shadcn/ui for UI design
+
+Backend:
+
+Express server with in-memory data storage
+
+Data Handling:
+
+TanStack Query (React Query) for state management and data fetching
+
+Drizzle ORM and Zod for schema definition and data validation
+
+Currency and Localization
+Default currency: Vietnamese Dong (VND)
+
+UI language: English throughout the application
+
+Forecasting and financial trend analysis functionality
+
+Users can add custom descriptions for each asset
+
+Goal
+To build a user-friendly and visually intuitive platform that helps users gain a clear understanding of their asset distribution and financial trends over time, enabling better financial decision-making.
