@@ -29,12 +29,16 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
 
       const monthKey = new Date(asset.month).toISOString().slice(0, 7); // Format: YYYY-MM
       if (!acc[monthKey]) {
-        acc[monthKey] = 0;
+        acc[monthKey] = {
+          total: 0,
+          assets: []
+        };
       }
-      acc[monthKey] += asset.amount;
+      acc[monthKey].total += asset.amount;
+      acc[monthKey].assets.push(asset);
       return acc;
     },
-    {} as Record<string, number>,
+    {} as Record<string, { total: number; assets: Asset[] }>,
   );
 
   // Sort months chronologically
@@ -49,7 +53,7 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
         year: "numeric",
       });
     }),
-    values: sortedMonths.map((month) => monthlyTotals[month]),
+    values: sortedMonths.map((month) => monthlyTotals[month].total),
     colors: ["orange"], // Use orange color for the line
   };
 
