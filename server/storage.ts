@@ -111,28 +111,9 @@ export class FileStorage implements IStorage {
   }
 
   private initSampleAssets() {
-    const sampleAssets: InsertAsset[] = [
-      { source: "Cash", amount: 32000000, description: "Physical cash at home" },
-      { source: "Savings Account", amount: 45000000, description: "Bank savings account" },
-      { source: "Investment Fund", amount: 23500000, description: "Mutual fund investment" },
-      { source: "Digital Wallet", amount: 12000000, description: "E-wallet" },
-      { source: "Stock Portfolio", amount: 8000000, description: "Stock investments" }
-    ];
-
-    sampleAssets.forEach(asset => {
-      const id = this.currentId++;
-      const now = new Date();
-      const description = asset.description === undefined ? null : asset.description;
-      
-      const newAsset: Asset = { 
-        ...asset, 
-        description, 
-        id, 
-        updatedAt: now 
-      };
-      
-      this.assets.set(id, newAsset);
-    });
+    // Initialize with empty data
+    this.assets = new Map();
+    this.currentId = 1;
   }
 
   async getAllAssets(): Promise<Asset[]> {
