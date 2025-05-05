@@ -7,7 +7,8 @@ import Dashboard from "@/pages/Dashboard";
 import Assets from "@/pages/Assets";
 import Settings from "@/pages/Settings";
 import NotFound from "@/pages/not-found";
-import Tracking from './pages/Tracking'; // Added import for Tracking component
+import Tracking from './pages/Tracking';
+import History from './pages/History'; // Added import for Tracking component
 
 function Router() {
   return (
