@@ -207,8 +207,16 @@
       "description": "okelala",
       "id": 28,
       "updatedAt": "2025-05-05T17:06:29.627Z"
+    },
+    {
+      "source": "Stock Portfolio",
+      "amount": 9999999,
+      "month": "2025-04-14T17:00:00.000Z",
+      "description": "1",
+      "id": 29,
+      "updatedAt": "2025-05-05T17:12:35.323Z"
     }
   ],
-  "nextId": 29,
+  "nextId": 30,
   "customSources": []
 }
