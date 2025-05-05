@@ -31,16 +31,8 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
       const date = new Date(month);
       return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     }),
-    datasets: [{
-      label: 'Total Assets',
-      data: sortedMonths.map(month => monthlyTotals[month]),
-      borderColor: '#FFD700',
-      backgroundColor: '#FFD700',
-      borderWidth: 2,
-      tension: 0.4,
-      pointRadius: 5,
-      pointHoverRadius: 7
-    }]
+    values: sortedMonths.map(month => monthlyTotals[month]),
+    colors: ['#FFD700']
   };
 
   // Custom chart options for line chart
@@ -54,6 +46,17 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
         callbacks: {
           label: (context: any) => formatCurrency(context.raw)
         }
+      }
+    },
+    elements: {
+      line: {
+        tension: 0.4,
+        borderWidth: 2,
+        borderColor: '#FFD700'
+      },
+      point: {
+        radius: 4,
+        backgroundColor: '#FFD700'
       }
     }
   };
