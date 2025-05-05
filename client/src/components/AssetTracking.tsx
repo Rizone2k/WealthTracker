@@ -57,7 +57,8 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
     elements: {
       line: {
         tension: 0.4, // Makes the line smooth
-        borderWidth: 2,
+        borderWidth: 3,
+        borderColor: '#FFD700', // Màu vàng
         fill: false // Remove background fill
       },
       point: {
