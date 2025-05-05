@@ -1,4 +1,4 @@
-import { Asset } from "@shared/schema";
+import { Asset, ASSET_SOURCE_COLORS } from "@shared/schema"; // Import ASSET_SOURCE_COLORS
 import {
   Card,
   CardContent,
@@ -22,23 +22,34 @@ interface AssetTrackingProps {
 }
 
 export default function AssetTracking({ assets }: AssetTrackingProps) {
-  // Group assets by month and calculate total for each month
-  const monthlyTotals = assets.reduce(
-    (acc, asset) => {
-      if (!asset.month) return acc;
+  // Group assets by month and source
+  const monthlySourceTotals = assets.reduce((acc, asset) => {
+    if (!asset.month) return acc;
 
-      const monthKey = new Date(asset.month).toISOString().slice(0, 7); // Format: YYYY-MM
-      if (!acc[monthKey]) {
-        acc[monthKey] = 0;
-      }
-      acc[monthKey] += asset.amount;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
+    const monthKey = new Date(asset.month).toISOString().slice(0, 7); // Format: YYYY-MM
+    const source = asset.source;
+
+    if (!acc[monthKey]) {
+      acc[monthKey] = {};
+    }
+    if (!acc[monthKey][source]) {
+      acc[monthKey][source] = 0;
+    }
+    acc[monthKey][source] += asset.amount;
+    return acc;
+  }, {} as Record<string, Record<string, number>>);
 
   // Sort months chronologically
-  const sortedMonths = Object.keys(monthlyTotals).sort();
+  const sortedMonths = Object.keys(monthlySourceTotals).sort();
+
+  // Get unique sources
+  const uniqueSources = Array.from(new Set(assets.map((asset) => asset.source)));
+
+  // Generate colors for sources that don't have predefined colors
+  const sourceColors = uniqueSources.reduce((acc, source, index) => {
+    acc[source] = ASSET_SOURCE_COLORS[source] || `hsl(${index * 360 / uniqueSources.length}, 70%, 50%)`;
+    return acc;
+  }, {} as Record<string, string>);
 
   // Prepare chart data
   const chartData = {
@@ -49,9 +60,14 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
         year: "numeric",
       });
     }),
-    values: sortedMonths.map((month) => monthlyTotals[month]),
-    colors: ["#3B82F6"], // Use blue color for the line
+    datasets: uniqueSources.map((source, index) => ({
+      label: source,
+      data: sortedMonths.map((month) => monthlySourceTotals[month]?.[source] || 0),
+      borderColor: sourceColors[source],
+      backgroundColor: sourceColors[source],
+    })),
   };
+
 
   // Custom chart options for line chart
   const options = {
@@ -88,12 +104,12 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
     },
     plugins: {
       legend: {
-        display: false,
+        display: true, // Show legend
       },
       tooltip: {
         callbacks: {
           label: (context: any) => {
-            return formatCurrency(context.raw);
+            return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
           },
         },
       },
