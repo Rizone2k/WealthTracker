@@ -17,45 +17,30 @@ import { ChartComponent } from "@/components/ui/chart";
 import { formatCurrency, formatPercentage } from "@/lib/utils";
 import { useState } from "react";
 
-const ASSET_SOURCE_COLORS: Record<string, string> = {
-  'Cash': '#22c55e',
-  'Savings Account': '#3b82f6', 
-  'Investment Fund': '#f59e0b',
-  'Digital Wallet': '#8b5cf6',
-  'Stock Portfolio': '#ec4899',
-  'Real Estate': '#14b8a6',
-  'Vehicle': '#f43f5e',
-};
-
 interface AssetTrackingProps {
   assets: Asset[];
 }
 
 export default function AssetTracking({ assets }: AssetTrackingProps) {
-  // Group assets by month and source
-  const monthlySourceTotals = assets.reduce((acc, asset) => {
-    if (!asset.month) return acc;
+  // Group assets by month and calculate total for each month
+  const monthlyTotals = assets.reduce(
+    (acc, asset) => {
+      if (!asset.month) return acc;
 
-    const monthKey = new Date(asset.month).toISOString().slice(0, 7); // Format: YYYY-MM
-    const source = asset.source;
-
-    if (!acc[monthKey]) {
-      acc[monthKey] = {};
-    }
-    if (!acc[monthKey][source]) {
-      acc[monthKey][source] = 0;
-    }
-    acc[monthKey][source] += asset.amount;
-    return acc;
-  }, {} as Record<string, Record<string, number>>);
+      const monthKey = new Date(asset.month).toISOString().slice(0, 7); // Format: YYYY-MM
+      if (!acc[monthKey]) {
+        acc[monthKey] = 0;
+      }
+      acc[monthKey] += asset.amount;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   // Sort months chronologically
-  const sortedMonths = Object.keys(monthlySourceTotals).sort();
+  const sortedMonths = Object.keys(monthlyTotals).sort();
 
-  // Get unique sources
-  const uniqueSources = Array.from(new Set(assets.map(asset => asset.source)));
-
-  // Prepare chart data with multiple datasets (one for each source)
+  // Prepare chart data
   const chartData = {
     labels: sortedMonths.map((month) => {
       const date = new Date(month);
@@ -64,15 +49,8 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
         year: "numeric",
       });
     }),
-    datasets: uniqueSources.map((source, index) => ({
-      label: source,
-      data: sortedMonths.map(month => monthlySourceTotals[month][source] || 0),
-      borderColor: ASSET_SOURCE_COLORS[source] || `hsl(${index * 360 / uniqueSources.length}, 70%, 50%)`,
-      backgroundColor: ASSET_SOURCE_COLORS[source] || `hsl(${index * 360 / uniqueSources.length}, 70%, 50%)`,
-      tension: 0.4,
-      fill: false,
-      pointRadius: 4
-    }))
+    values: sortedMonths.map((month) => monthlyTotals[month]),
+    colors: ["#3B82F6"], // Use blue color for the line
   };
 
   // Custom chart options for line chart
@@ -96,24 +74,26 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
     },
     elements: {
       line: {
-        tension: 0.4,
+        tension: 0.4, // Makes the line smooth
         borderWidth: 2,
+        fill: "start",
+        backgroundColor: "rgba(59, 130, 246, 0.1)", // Light blue background
       },
       point: {
         radius: 4,
         hitRadius: 10,
         hoverRadius: 6,
+        backgroundColor: "#3B82F6",
       },
     },
     plugins: {
       legend: {
-        display: true,
-        position: 'top' as const,
+        display: false,
       },
       tooltip: {
         callbacks: {
           label: (context: any) => {
-            return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
+            return formatCurrency(context.raw);
           },
         },
       },
