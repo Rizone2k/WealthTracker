@@ -1,3 +1,4 @@
+
 import { Asset } from "@shared/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,7 +14,7 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
   // Group assets by month and calculate total for each month
   const monthlyTotals = assets.reduce((acc, asset) => {
     if (!asset.month) return acc;
-
+    
     const monthKey = new Date(asset.month).toISOString().slice(0, 7); // Format: YYYY-MM
     if (!acc[monthKey]) {
       acc[monthKey] = 0;
@@ -31,56 +32,52 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
       const date = new Date(month);
       return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     }),
-    datasets: [{
-      label: 'Total Assets',
-      data: sortedMonths.map(month => monthlyTotals[month]),
-      borderColor: '#FFD700',
-      backgroundColor: '#22C55E',
-      borderWidth: 2,
-      tension: 0.4,
-      fill: false,
-      pointRadius: 6,
-      pointBackgroundColor: '#22C55E',
-      pointBorderColor: '#22C55E',
-      pointBorderWidth: 2,
-      pointHoverRadius: 8,
-      lineTension: 0.4
-    }]
+    values: sortedMonths.map(month => monthlyTotals[month]),
+    colors: ['#3B82F6'] // Use blue color for the line
   };
 
   // Custom chart options for line chart
   const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        callbacks: {
-          label: (context: any) => formatCurrency(context.raw)
-        }
-      }
-    },
     scales: {
       y: {
         beginAtZero: true,
         ticks: {
-          callback: (value: any) => formatCurrency(value)
+          callback: (value: number) => formatCurrency(value)
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+          drawBorder: false
+        }
+      },
+      x: {
+        grid: {
+          display: false
         }
       }
-    }
-  };
-
-  // Custom chart options for line chart
-  const options = {
-    responsive: true,
+    },
+    elements: {
+      line: {
+        tension: 0.4, // Makes the line smooth
+        borderWidth: 2,
+        fill: 'start',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)' // Light blue background
+      },
+      point: {
+        radius: 4,
+        hitRadius: 10,
+        hoverRadius: 6,
+        backgroundColor: '#3B82F6'
+      }
+    },
     plugins: {
       legend: {
         display: false
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => formatCurrency(context.raw)
+          label: (context: any) => {
+            return formatCurrency(context.raw);
+          }
         }
       }
     }
@@ -114,7 +111,7 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
             width={600}
           />
         </div>
-
+        
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Select 
