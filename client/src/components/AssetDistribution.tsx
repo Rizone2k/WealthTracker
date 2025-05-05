@@ -11,22 +11,26 @@ interface AssetDistributionProps {
 }
 
 export default function AssetDistribution({ assets, onAddClick }: AssetDistributionProps) {
-  // Find the latest month from assets
-  const latestMonth = assets.reduce((latest, asset) => {
-    const assetDate = new Date(asset.month);
-    return latest && latest > assetDate ? latest : assetDate;
-  }, null as Date | null);
+  // Get all unique months from assets
+  const months = [...new Set(assets.map(asset => {
+    const date = new Date(asset.month);
+    return date.toISOString().slice(0, 7); // YYYY-MM format
+  }))].sort().reverse();
 
-  // Filter assets for the latest month only
-  const latestMonthAssets = assets.filter(asset => {
-    if (!latestMonth) return false;
-    const assetMonth = new Date(asset.month);
-    return assetMonth.getMonth() === latestMonth.getMonth() && 
-           assetMonth.getFullYear() === latestMonth.getFullYear();
+  // Find the latest month
+  const latestMonth = months[0];
+  
+  // State for selected month
+  const [selectedMonth, setSelectedMonth] = useState(latestMonth);
+
+  // Filter assets for selected month
+  const selectedMonthAssets = assets.filter(asset => {
+    const assetMonth = new Date(asset.month).toISOString().slice(0, 7);
+    return assetMonth === selectedMonth;
   });
 
   // Group assets by source and calculate totals
-  const assetGroups = latestMonthAssets.reduce((acc, asset) => {
+  const assetGroups = selectedMonthAssets.reduce((acc, asset) => {
     const source = asset.source;
     if (!acc[source]) {
       acc[source] = 0;
@@ -53,11 +57,20 @@ export default function AssetDistribution({ assets, onAddClick }: AssetDistribut
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div className="space-y-1">
           <CardTitle>Asset Distribution</CardTitle>
-          <CardDescription>
-            {latestMonth 
-              ? `Assets distribution for ${latestMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}` 
-              : 'See how your assets are distributed'}
-          </CardDescription>
+          <div className="flex items-center gap-2">
+            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Select month" />
+              </SelectTrigger>
+              <SelectContent>
+                {months.map((month) => (
+                  <SelectItem key={month} value={month}>
+                    {new Date(month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <div className="flex space-x-2">
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
