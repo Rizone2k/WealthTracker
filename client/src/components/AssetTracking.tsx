@@ -17,6 +17,16 @@ import { ChartComponent } from "@/components/ui/chart";
 import { formatCurrency, formatPercentage } from "@/lib/utils";
 import { useState } from "react";
 
+const ASSET_SOURCE_COLORS: Record<string, string> = {
+  'Cash': '#22c55e',
+  'Savings Account': '#3b82f6', 
+  'Investment Fund': '#f59e0b',
+  'Digital Wallet': '#8b5cf6',
+  'Stock Portfolio': '#ec4899',
+  'Real Estate': '#14b8a6',
+  'Vehicle': '#f43f5e',
+};
+
 interface AssetTrackingProps {
   assets: Asset[];
 }
