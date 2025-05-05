@@ -11,7 +11,7 @@ WealthTracker is a personal asset management application that helps you clearly 
 - **Detailed Management** 📝: Management table for adding, editing, deleting, and searching assets
 - **Activity History** 📜: Track recent changes in assets
 
-## Supported Asset Types 💎
+## Example Assets 💎
 
 - Cash 💵
 - Savings Account 🏦
