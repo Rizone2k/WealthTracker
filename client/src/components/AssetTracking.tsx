@@ -37,46 +37,14 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
 
   // Custom chart options for line chart
   const options = {
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: (value: number) => formatCurrency(value)
-        },
-        grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
-          drawBorder: false
-        }
-      },
-      x: {
-        grid: {
-          display: false
-        }
-      }
-    },
-    elements: {
-      line: {
-        tension: 0.4, // Makes the line smooth
-        borderWidth: 3,
-        borderColor: '#FFD700', // Màu vàng
-        fill: false // Remove background fill
-      },
-      point: {
-        radius: 4,
-        hitRadius: 10,
-        hoverRadius: 6,
-        backgroundColor: '#3B82F6'
-      }
-    },
+    responsive: true,
     plugins: {
       legend: {
         display: false
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => {
-            return formatCurrency(context.raw);
-          }
+          label: (context: any) => formatCurrency(context.raw)
         }
       }
     }
