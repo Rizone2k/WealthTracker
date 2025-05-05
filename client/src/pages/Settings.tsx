@@ -7,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 
 export default function Settings() {
@@ -35,9 +35,8 @@ export default function Settings() {
                   Switch between light and dark mode
                 </p>
               </div>
-              <Switch id="dark-mode" />
+              {/*<Switch id="dark-mode" />*/}
             </div>
-            
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="font-size">Font Size</Label>
@@ -50,30 +49,42 @@ export default function Settings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Currency Display</CardTitle>
+            <CardTitle>Currency Settings</CardTitle>
             <CardDescription>
               Configure how monetary values are displayed
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="show-decimals">Show Decimals</Label>
-                <p className="text-sm text-gray-500">
-                  Display decimal places in currency values
-                </p>
-              </div>
-              <Switch id="show-decimals" defaultChecked />
+            <div className="space-y-2">
+              <Label htmlFor="currency">Currency</Label>
+              <Select defaultValue="VND">
+                <SelectTrigger>
+                  <SelectValue placeholder="Select currency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="VND">Vietnamese Dong (₫)</SelectItem>
+                  <SelectItem value="USD">US Dollar ($)</SelectItem>
+                  <SelectItem value="EUR">Euro (€)</SelectItem>
+                  <SelectItem value="GBP">British Pound (£)</SelectItem>
+                  <SelectItem value="JPY">Japanese Yen (¥)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-sm text-gray-500">Choose your preferred currency for displaying amounts</p>
             </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="show-currency-symbol">Show Currency Symbol</Label>
-                <p className="text-sm text-gray-500">
-                  Display currency symbol (₫) before values
-                </p>
-              </div>
-              <Switch id="show-currency-symbol" defaultChecked />
+
+            <div className="space-y-2">
+              <Label htmlFor="format">Number Format</Label>
+              <Select defaultValue="vi-VN">
+                <SelectTrigger>
+                  <SelectValue placeholder="Select format" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="vi-VN">Vietnamese (1.234.567)</SelectItem>
+                  <SelectItem value="en-US">US (1,234,567)</SelectItem>
+                  <SelectItem value="de-DE">European (1.234.567,00)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-sm text-gray-500">Choose how numbers should be formatted</p>
             </div>
           </CardContent>
         </Card>
