@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 
 export default function Settings() {
   return (
@@ -19,33 +18,6 @@ export default function Settings() {
           <h1 className="text-2xl font-bold">Settings</h1>
           <p className="text-gray-500">Manage your application preferences</p>
         </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Appearance</CardTitle>
-            <CardDescription>
-              Customize how the application looks
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="dark-mode">Dark Mode</Label>
-                <p className="text-sm text-gray-500">
-                  Switch between light and dark mode
-                </p>
-              </div>
-              {/*<Switch id="dark-mode" />*/}
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="font-size">Font Size</Label>
-                <span className="text-sm text-gray-500">14px</span>
-              </div>
-              <Slider defaultValue={[14]} max={20} min={10} step={1} />
-            </div>
-          </CardContent>
-        </Card>
 
         <Card>
           <CardHeader>
