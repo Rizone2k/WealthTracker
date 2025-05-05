@@ -36,15 +36,39 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
       data: sortedMonths.map(month => monthlyTotals[month]),
       borderColor: '#FFD700',
       backgroundColor: '#22C55E',
-      borderWidth: 3,
-      tension: 0.3,
+      borderWidth: 2,
+      tension: 0.4,
       fill: false,
       pointRadius: 6,
       pointBackgroundColor: '#22C55E',
-      pointBorderColor: '#FFD700',
+      pointBorderColor: '#22C55E',
       pointBorderWidth: 2,
-      pointHoverRadius: 8
+      pointHoverRadius: 8,
+      lineTension: 0.4
     }]
+  };
+
+  // Custom chart options for line chart
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => formatCurrency(context.raw)
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value: any) => formatCurrency(value)
+        }
+      }
+    }
   };
 
   // Custom chart options for line chart
