@@ -15,7 +15,7 @@ function Router() {
       <Route path="/" component={Dashboard} />
       <Route path="/assets" component={Assets} />
       <Route path="/tracking" component={Tracking} /> {/* Added route for Tracking */}
-      <Route path="/history" component={Dashboard} />
+      <Route path="/history" component={History} />
       <Route path="/settings" component={Settings} />
       <Route component={NotFound} />
     </Switch>
