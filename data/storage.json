@@ -1,11 +1,10 @@
-
 {
   "assets": [
     {
       "source": "Cash",
       "amount": 40000000,
       "description": "Tiền mặt",
-      "month": "2024-01-01T00:00:00.000Z", 
+      "month": "2024-01-01T00:00:00.000Z",
       "id": 1,
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },
@@ -176,8 +175,26 @@
       "month": "2024-06-01T00:00:00.000Z",
       "id": 22,
       "updatedAt": "2024-06-01T00:00:00.000Z"
+    },
+    {
+      "source": "ABC",
+      "amount": 999999,
+      "description": "Oke test 2",
+      "month": "2025-04-14T17:00:00.000Z",
+      "id": 23,
+      "updatedAt": "2025-05-05T15:35:35.734Z"
+    },
+    {
+      "source": "ABC",
+      "amount": 9999999,
+      "description": "month before",
+      "month": "2025-03-14T17:00:00.000Z",
+      "id": 24,
+      "updatedAt": "2025-05-05T15:59:33.393Z"
     }
   ],
-  "nextId": 23,
-  "customSources": []
+  "nextId": 25,
+  "customSources": [
+    "ABC"
+  ]
 }
