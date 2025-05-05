@@ -63,8 +63,32 @@
       "month": "2024-04-01T00:00:00.000Z",
       "id": 8,
       "updatedAt": "2024-04-01T00:00:00.000Z"
+    },
+    {
+      "source": "Cash",
+      "amount": 9999999,
+      "description": "test 2",
+      "month": "2025-04-14T17:00:00.000Z",
+      "id": 9,
+      "updatedAt": "2025-05-05T03:06:00.417Z"
+    },
+    {
+      "source": "Vehicle",
+      "amount": 9999999,
+      "description": "test 3",
+      "month": "2025-04-14T17:00:00.000Z",
+      "id": 10,
+      "updatedAt": "2025-05-05T03:06:41.480Z"
+    },
+    {
+      "source": "Real Estate",
+      "amount": 9999999,
+      "description": "ok",
+      "month": "2025-04-14T17:00:00.000Z",
+      "id": 11,
+      "updatedAt": "2025-05-05T03:07:12.992Z"
     }
   ],
-  "nextId": 9,
+  "nextId": 12,
   "customSources": []
 }
