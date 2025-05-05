@@ -31,8 +31,13 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
       const date = new Date(month);
       return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     }),
-    values: sortedMonths.map(month => monthlyTotals[month]),
-    colors: ['#3B82F6'] // Use blue color for the line
+    datasets: [{
+      data: sortedMonths.map(month => monthlyTotals[month]),
+      borderColor: '#FFD700',
+      borderWidth: 2,
+      tension: 0.4,
+      fill: false
+    }]
   };
 
   // Custom chart options for line chart
