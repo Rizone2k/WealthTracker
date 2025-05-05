@@ -1,4 +1,3 @@
-
 import { Asset } from "@shared/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,7 +13,7 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
   // Group assets by month and calculate total for each month
   const monthlyTotals = assets.reduce((acc, asset) => {
     if (!asset.month) return acc;
-    
+
     const monthKey = new Date(asset.month).toISOString().slice(0, 7); // Format: YYYY-MM
     if (!acc[monthKey]) {
       acc[monthKey] = 0;
@@ -59,8 +58,7 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
       line: {
         tension: 0.4, // Makes the line smooth
         borderWidth: 2,
-        fill: 'start',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)' // Light blue background
+        fill: false // Remove background fill
       },
       point: {
         radius: 4,
@@ -111,7 +109,7 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
             width={600}
           />
         </div>
-        
+
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Select 
