@@ -1,12 +1,43 @@
-
 {
   "assets": [
+    {
+      "id": 1,
+      "source": "XXX",
+      "amount": 999,
+      "description": "Test XXX April",
+      "month": "2025-04-15T00:00:00.000Z",
+      "updatedAt": "2025-04-15T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "source": "YYY",
+      "amount": 333,
+      "description": "Test YYY April",
+      "month": "2025-04-15T00:00:00.000Z",
+      "updatedAt": "2025-04-15T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "source": "XXX",
+      "amount": 111,
+      "description": "Test XXX May",
+      "month": "2025-05-15T00:00:00.000Z",
+      "updatedAt": "2025-05-15T00:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "source": "YYY",
+      "amount": 333,
+      "description": "Test YYY May",
+      "month": "2025-05-15T00:00:00.000Z",
+      "updatedAt": "2025-05-15T00:00:00.000Z"
+    },
     {
       "source": "Cash",
       "amount": 40000000,
       "description": "Tiền mặt",
-      "month": "2024-01-01T00:00:00.000Z", 
-      "id": 1,
+      "month": "2024-01-01T00:00:00.000Z",
+      "id": 5,
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },
     {
@@ -14,7 +45,7 @@
       "amount": 50000000,
       "description": "Tài khoản tiết kiệm",
       "month": "2024-01-01T00:00:00.000Z",
-      "id": 2,
+      "id": 6,
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },
     {
@@ -22,7 +53,7 @@
       "amount": 25000000,
       "description": "Quỹ đầu tư",
       "month": "2024-02-01T00:00:00.000Z",
-      "id": 3,
+      "id": 7,
       "updatedAt": "2024-02-01T00:00:00.000Z"
     },
     {
@@ -30,7 +61,7 @@
       "amount": 15000000,
       "description": "Ví điện tử",
       "month": "2024-02-01T00:00:00.000Z",
-      "id": 4,
+      "id": 8,
       "updatedAt": "2024-02-01T00:00:00.000Z"
     },
     {
@@ -38,7 +69,7 @@
       "amount": 80000000,
       "description": "Danh mục cổ phiếu",
       "month": "2024-03-01T00:00:00.000Z",
-      "id": 5,
+      "id": 9,
       "updatedAt": "2024-03-01T00:00:00.000Z"
     },
     {
@@ -46,7 +77,7 @@
       "amount": 120000000,
       "description": "Bất động sản",
       "month": "2024-03-01T00:00:00.000Z",
-      "id": 6,
+      "id": 10,
       "updatedAt": "2024-03-01T00:00:00.000Z"
     },
     {
@@ -54,7 +85,7 @@
       "amount": 45000000,
       "description": "Tiền mặt tháng 4",
       "month": "2024-04-01T00:00:00.000Z",
-      "id": 7,
+      "id": 11,
       "updatedAt": "2024-04-01T00:00:00.000Z"
     },
     {
@@ -62,7 +93,7 @@
       "amount": 55000000,
       "description": "Tài khoản tiết kiệm tháng 4",
       "month": "2024-04-01T00:00:00.000Z",
-      "id": 8,
+      "id": 12,
       "updatedAt": "2024-04-01T00:00:00.000Z"
     },
     {
@@ -70,7 +101,7 @@
       "amount": 9999999,
       "description": "test 2",
       "month": "2025-04-14T17:00:00.000Z",
-      "id": 9,
+      "id": 13,
       "updatedAt": "2025-05-05T03:06:00.417Z"
     },
     {
@@ -78,7 +109,7 @@
       "amount": 9999999,
       "description": "test 3",
       "month": "2025-04-14T17:00:00.000Z",
-      "id": 10,
+      "id": 14,
       "updatedAt": "2025-05-05T03:06:41.480Z"
     },
     {
@@ -86,7 +117,7 @@
       "amount": 9999999,
       "description": "ok",
       "month": "2025-04-14T17:00:00.000Z",
-      "id": 11,
+      "id": 15,
       "updatedAt": "2025-05-05T03:07:12.992Z"
     },
     {
@@ -94,7 +125,7 @@
       "amount": 30000000,
       "description": "Đầu tư mới vào quỹ",
       "month": "2024-05-01T00:00:00.000Z",
-      "id": 12,
+      "id": 16,
       "updatedAt": "2024-05-01T00:00:00.000Z"
     },
     {
@@ -102,7 +133,7 @@
       "amount": 85000000,
       "description": "Mua thêm cổ phiếu",
       "month": "2024-05-01T00:00:00.000Z",
-      "id": 13,
+      "id": 17,
       "updatedAt": "2024-05-01T00:00:00.000Z"
     },
     {
@@ -110,7 +141,7 @@
       "amount": 18000000,
       "description": "Nạp thêm tiền vào ví",
       "month": "2024-05-01T00:00:00.000Z",
-      "id": 14,
+      "id": 18,
       "updatedAt": "2024-05-01T00:00:00.000Z"
     },
     {
@@ -118,7 +149,7 @@
       "amount": 42000000,
       "description": "Tiền mặt tháng 5",
       "month": "2024-05-01T00:00:00.000Z",
-      "id": 15,
+      "id": 19,
       "updatedAt": "2024-05-01T00:00:00.000Z"
     },
     {
@@ -126,7 +157,7 @@
       "amount": 58000000,
       "description": "Tiết kiệm tháng 5",
       "month": "2024-05-01T00:00:00.000Z",
-      "id": 16,
+      "id": 20,
       "updatedAt": "2024-05-01T00:00:00.000Z"
     },
     {
@@ -134,7 +165,7 @@
       "amount": 125000000,
       "description": "Đầu tư thêm BĐS",
       "month": "2024-05-01T00:00:00.000Z",
-      "id": 17,
+      "id": 21,
       "updatedAt": "2024-05-01T00:00:00.000Z"
     },
     {
@@ -142,7 +173,7 @@
       "amount": 35000000,
       "description": "Mua xe máy mới",
       "month": "2024-05-01T00:00:00.000Z",
-      "id": 18,
+      "id": 22,
       "updatedAt": "2024-05-01T00:00:00.000Z"
     },
     {
@@ -150,7 +181,7 @@
       "amount": 32000000,
       "description": "Tăng vốn đầu tư",
       "month": "2024-06-01T00:00:00.000Z",
-      "id": 19,
+      "id": 23,
       "updatedAt": "2024-06-01T00:00:00.000Z"
     },
     {
@@ -158,7 +189,7 @@
       "amount": 88000000,
       "description": "Mua thêm cổ phiếu blue-chip",
       "month": "2024-06-01T00:00:00.000Z",
-      "id": 20,
+      "id": 24,
       "updatedAt": "2024-06-01T00:00:00.000Z"
     },
     {
@@ -166,7 +197,7 @@
       "amount": 20000000,
       "description": "Nạp tiền ví điện tử",
       "month": "2024-06-01T00:00:00.000Z",
-      "id": 21,
+      "id": 25,
       "updatedAt": "2024-06-01T00:00:00.000Z"
     },
     {
@@ -174,10 +205,10 @@
       "amount": 44000000,
       "description": "Tiền mặt tháng 6",
       "month": "2024-06-01T00:00:00.000Z",
-      "id": 22,
+      "id": 26,
       "updatedAt": "2024-06-01T00:00:00.000Z"
     }
   ],
-  "nextId": 23,
+  "nextId": 27,
   "customSources": []
 }

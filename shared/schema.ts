@@ -1,4 +1,5 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+
+import { pgTable, text, serial, integer, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -6,8 +7,8 @@ export const assets = pgTable("assets", {
   id: serial("id").primaryKey(),
   source: text("source").notNull(),
   amount: integer("amount").notNull(),
+  month: timestamp("month").notNull(),
   description: text("description"),
-  month: timestamp("month").notNull(), // Track which month this asset amount belongs to
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
@@ -27,33 +28,24 @@ export type Asset = typeof assets.$inferSelect;
 
 export const assetSourceSchema = z.enum([
   "Cash",
-  "Savings Account",
+  "Savings Account", 
   "Investment Fund",
   "Digital Wallet",
   "Stock Portfolio",
   "Real Estate",
-  "Gold & Jewelry",
-  "Cryptocurrency",
-  "Bonds",
-  "Foreign Currency",
   "Vehicle",
   "Other"
 ]);
 
 export type AssetSource = z.infer<typeof assetSourceSchema>;
 
-// Default asset sources with their colors
-export const ASSET_SOURCE_COLORS: Record<string, string> = {
-  "Cash": "#3B82F6", // primary blue
-  "Savings Account": "#10B981", // green
-  "Investment Fund": "#6366F1", // indigo
-  "Digital Wallet": "#F59E0B", // amber
-  "Stock Portfolio": "#8B5CF6", // purple
-  "Real Estate": "#EF4444", // red
-  "Gold & Jewelry": "#F59E0B", // amber/gold
-  "Cryptocurrency": "#2563EB", // blue
-  "Bonds": "#059669", // emerald
-  "Foreign Currency": "#0EA5E9", // sky blue
-  "Vehicle": "#7C3AED", // violet
-  "Other": "#EC4899", // pink
+export const ASSET_SOURCE_COLORS: Record<AssetSource, string> = {
+  "Cash": "#3B82F6",
+  "Savings Account": "#10B981",
+  "Investment Fund": "#6366F1",
+  "Digital Wallet": "#F59E0B", 
+  "Stock Portfolio": "#8B5CF6",
+  "Real Estate": "#EF4444",
+  "Vehicle": "#7C3AED",
+  "Other": "#EC4899"
 };
