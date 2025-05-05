@@ -2,6 +2,7 @@ import { Asset } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 interface RecentActivityProps {
@@ -86,9 +87,11 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>Recent Activity</CardTitle>
-        <Button variant="link" size="sm">
-          View All
-        </Button>
+        <Link href="/history">
+          <Button variant="link" size="sm">
+            View All
+          </Button>
+        </Link>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
