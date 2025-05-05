@@ -1,4 +1,4 @@
-import { Asset, ASSET_SOURCE_COLORS } from "@shared/schema"; // Import ASSET_SOURCE_COLORS
+import { Asset } from "@shared/schema";
 import {
   Card,
   CardContent,
@@ -16,6 +16,21 @@ import {
 import { ChartComponent } from "@/components/ui/chart";
 import { formatCurrency, formatPercentage } from "@/lib/utils";
 import { useState } from "react";
+
+const ASSET_SOURCE_COLORS: Record<string, string> = {
+  "Cash": "#3B82F6",
+  "Savings Account": "#10B981",
+  "Investment Fund": "#6366F1", 
+  "Digital Wallet": "#F59E0B",
+  "Stock Portfolio": "#8B5CF6",
+  "Real Estate": "#EF4444",
+  "Gold & Jewelry": "#F59E0B",
+  "Cryptocurrency": "#2563EB",
+  "Bonds": "#059669",
+  "Foreign Currency": "#0EA5E9",
+  "Vehicle": "#7C3AED",
+  "Other": "#EC4899"
+};
 
 interface AssetTrackingProps {
   assets: Asset[];
