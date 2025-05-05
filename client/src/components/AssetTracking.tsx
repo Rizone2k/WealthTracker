@@ -32,13 +32,18 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
       return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     }),
     datasets: [{
+      label: 'Total Assets',
       data: sortedMonths.map(month => monthlyTotals[month]),
       borderColor: '#FFD700',
       backgroundColor: '#22C55E',
-      borderWidth: 2,
-      tension: 0.4,
+      borderWidth: 3,
+      tension: 0.3,
       fill: false,
-      pointRadius: 5
+      pointRadius: 6,
+      pointBackgroundColor: '#22C55E',
+      pointBorderColor: '#FFD700',
+      pointBorderWidth: 2,
+      pointHoverRadius: 8
     }]
   };
 
