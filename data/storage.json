@@ -17,22 +17,6 @@
       "updatedAt": "2025-04-15T00:00:00.000Z"
     },
     {
-      "id": 3,
-      "source": "XXX",
-      "amount": 111,
-      "description": "Test XXX May",
-      "month": "2025-05-15T00:00:00.000Z",
-      "updatedAt": "2025-05-15T00:00:00.000Z"
-    },
-    {
-      "id": 4,
-      "source": "YYY",
-      "amount": 333,
-      "description": "Test YYY May",
-      "month": "2025-05-15T00:00:00.000Z",
-      "updatedAt": "2025-05-15T00:00:00.000Z"
-    },
-    {
       "source": "Cash",
       "amount": 40000000,
       "description": "Tiền mặt",
@@ -207,8 +191,24 @@
       "month": "2024-06-01T00:00:00.000Z",
       "id": 26,
       "updatedAt": "2024-06-01T00:00:00.000Z"
+    },
+    {
+      "source": "Digital Wallet",
+      "amount": 9999999,
+      "month": "2025-04-14T17:00:00.000Z",
+      "description": "ple",
+      "id": 27,
+      "updatedAt": "2025-05-05T17:05:53.394Z"
+    },
+    {
+      "source": "Vehicle",
+      "amount": 999999,
+      "month": "2025-04-14T17:00:00.000Z",
+      "description": "okelala",
+      "id": 28,
+      "updatedAt": "2025-05-05T17:06:29.627Z"
     }
   ],
-  "nextId": 27,
+  "nextId": 29,
   "customSources": []
 }
