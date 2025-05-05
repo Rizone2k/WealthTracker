@@ -52,11 +52,11 @@ export default function AssetTracking({ assets }: AssetTrackingProps) {
       line: {
         tension: 0.4,
         borderWidth: 2,
-        borderColor: '#FFD700'
+        borderColor: '#FFD700' // Yellow line
       },
       point: {
         radius: 4,
-        backgroundColor: '#FFD700'
+        backgroundColor: '#22C55E' // Green points
       }
     }
   };
