@@ -121,7 +121,7 @@ export default function Dashboard() {
           ))}
         </div>
       ) : (
-        <MetricsOverview assets={assets} />
+        <MetricsOverview assets={assets} selectedMonth={selectedMonth} />
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
