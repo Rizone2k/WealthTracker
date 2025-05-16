@@ -1,24 +1,55 @@
 
 {
-    "assets": [
-      {
-        "id": 1,
-        "source": "Savings Account",
-        "amount": 50000000,
-        "description": "Example savings account",
-        "month": "2024-04-15T00:00:00.000Z",
-        "updatedAt": "2024-04-15T00:00:00.000Z"
-      },
-      {
-        "id": 2,
-        "source": "Investment",
-        "amount": 100000000,
-        "description": "Example investment portfolio",
-        "month": "2024-04-15T00:00:00.000Z",
-        "updatedAt": "2024-04-15T00:00:00.000Z"
-      }
-    ],
-    "nextId": 3,
-    "customSources": []
-  }
-  
+  "assets": [
+    {
+      "id": 1,
+      "source": "Savings Account",
+      "amount": 50000000,
+      "description": "Primary savings",
+      "month": "2024-04-15T00:00:00.000Z",
+      "updatedAt": "2024-04-15T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "source": "Investment Fund",
+      "amount": 100000000,
+      "description": "Stock portfolio",
+      "month": "2024-04-15T00:00:00.000Z",
+      "updatedAt": "2024-04-15T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "source": "Digital Wallet",
+      "amount": 25000000,
+      "description": "Emergency fund",
+      "month": "2024-04-15T00:00:00.000Z",
+      "updatedAt": "2024-04-15T00:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "source": "Savings Account",
+      "amount": 55000000,
+      "description": "Primary savings increased",
+      "month": "2024-05-15T00:00:00.000Z",
+      "updatedAt": "2024-05-15T00:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "source": "Investment Fund",
+      "amount": 110000000,
+      "description": "Stock portfolio growth",
+      "month": "2024-05-15T00:00:00.000Z",
+      "updatedAt": "2024-05-15T00:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "source": "Digital Wallet",
+      "amount": 30000000,
+      "description": "Emergency fund increased",
+      "month": "2024-05-15T00:00:00.000Z",
+      "updatedAt": "2024-05-15T00:00:00.000Z"
+    }
+  ],
+  "nextId": 7,
+  "customSources": []
+}
