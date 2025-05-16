@@ -7,11 +7,33 @@ interface MetricsOverviewProps {
 }
 
 export default function MetricsOverview({ assets }: MetricsOverviewProps) {
-  // Calculate total assets
-  const totalAmount = assets.reduce((sum, asset) => sum + asset.amount, 0);
+  // Find the latest month
+  const latestMonth = assets.reduce((latest, asset) => {
+    const assetMonth = new Date(asset.month);
+    return latest && latest > assetMonth ? latest : assetMonth;
+  }, null as Date | null);
 
-  // Get count of unique asset sources
-  const uniqueSources = new Set(assets.map(asset => asset.source)).size;
+  // Calculate total assets for latest month only
+  const totalAmount = assets
+    .filter(asset => {
+      const assetMonth = new Date(asset.month);
+      return latestMonth && 
+        assetMonth.getFullYear() === latestMonth.getFullYear() && 
+        assetMonth.getMonth() === latestMonth.getMonth();
+    })
+    .reduce((sum, asset) => sum + asset.amount, 0);
+
+  // Get count of unique asset sources for latest month
+  const uniqueSources = new Set(
+    assets
+      .filter(asset => {
+        const assetMonth = new Date(asset.month);
+        return latestMonth &&
+          assetMonth.getFullYear() === latestMonth.getFullYear() &&
+          assetMonth.getMonth() === latestMonth.getMonth();
+      })
+      .map(asset => asset.source)
+  ).size;
 
   // Get last updated asset
   const lastUpdatedAsset = assets.length > 0 
