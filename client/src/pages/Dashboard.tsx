@@ -229,12 +229,6 @@ export default function Dashboard() {
           </>
         ) : (
           <>
-            <div className="lg:col-span-2">
-              <AssetDistribution 
-                assets={assets} 
-                onAddClick={handleAddAssetClick} 
-              />
-            </div>
             <RecentActivity assets={assets} />
           </>
         )}

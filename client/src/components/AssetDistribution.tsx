@@ -14,7 +14,7 @@ interface AssetDistributionProps {
   onMonthChange: (month: string) => void;
 }
 
-export default function AssetDistribution({ assets, onAddClick }: AssetDistributionProps) {
+export default function AssetDistribution({ assets, onAddClick, selectedMonth, onMonthChange }: AssetDistributionProps) {
   // Get all unique months from assets
   const months = [...new Set(assets.map(asset => {
     const date = new Date(asset.month);
