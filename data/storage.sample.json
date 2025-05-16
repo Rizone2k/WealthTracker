@@ -1,0 +1,24 @@
+
+{
+    "assets": [
+      {
+        "id": 1,
+        "source": "Savings Account",
+        "amount": 50000000,
+        "description": "Example savings account",
+        "month": "2024-04-15T00:00:00.000Z",
+        "updatedAt": "2024-04-15T00:00:00.000Z"
+      },
+      {
+        "id": 2,
+        "source": "Investment",
+        "amount": 100000000,
+        "description": "Example investment portfolio",
+        "month": "2024-04-15T00:00:00.000Z",
+        "updatedAt": "2024-04-15T00:00:00.000Z"
+      }
+    ],
+    "nextId": 3,
+    "customSources": []
+  }
+  
