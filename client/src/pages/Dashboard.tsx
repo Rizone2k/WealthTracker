@@ -31,6 +31,22 @@ export default function Dashboard() {
   // Combined loading state
   const isLoading = assetsLoading || sourcesLoading;
   
+  // Get all unique months
+  const months = [...new Set(assets.map(asset => {
+    const date = new Date(asset.month);
+    return date.toISOString().slice(0, 7); // YYYY-MM format
+  }))].sort().reverse();
+
+  // Default to latest month
+  const [selectedMonth, setSelectedMonth] = useState(months[0] || '');
+
+  // Update selected month when assets change
+  useEffect(() => {
+    if (months.length > 0 && !months.includes(selectedMonth)) {
+      setSelectedMonth(months[0]);
+    }
+  }, [assets]);
+
   // Create merged assets by combining amounts for the same source
   const mergedAssets = useMemo(() => {
     if (!assets.length) return [];
