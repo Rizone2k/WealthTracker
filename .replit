@@ -15,7 +15,7 @@ localPort = 5000
 externalPort = 80
 
 [workflows]
-runButton = "Project Dev"
+runButton = "Dev Server"
 
 [[workflows.workflow]]
 name = "Project"
@@ -43,3 +43,12 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run dev"
+
+[[workflows.workflow]]
+name = "Dev Server"
+author = 42235992
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "VITE_FORCE_DEV_SERVER_HTTPS=true NODE_ENV=development tsx server/index.ts"
