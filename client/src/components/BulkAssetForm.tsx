@@ -41,13 +41,10 @@ interface BulkAssetFormProps {
 const formSchema = z.object({
   month: z.date(),
   assets: z.array(z.object({
-    source: z.string(),
-    amount: z.string().optional().default(""),
+    source: z.string().min(1, "Source is required"),
+    amount: z.string().min(1, "Amount is required"),
   }))
-}).refine(
-  data => data.assets.some(asset => asset.amount && asset.amount.trim() !== ""),
-  { message: "At least one asset amount is required" }
-);
+});
 
 export default function BulkAssetForm({
   isOpen,
@@ -69,17 +66,27 @@ export default function BulkAssetForm({
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
       
-      const assetsToAdd = values.assets
-        .filter(asset => asset.amount && asset.amount.trim() !== "")
+      // Filter out assets with empty amounts
+      const assetsToAdd = data.assets
+        .filter(asset => asset.amount !== "")
         .map(asset => ({
           source: asset.source,
           amount: parseFormattedCurrency(asset.amount),
-          month: values.month.toISOString(),
+          month: data.month.toISOString(),
         }));
+
+      if (assetsToAdd.length === 0) {
+        toast({
+          title: "No assets to add",
+          description: "Please enter at least one asset amount",
+          variant: "destructive",
+        });
+        return;
+      }
 
       // Add all assets
       await Promise.all(
@@ -97,15 +104,9 @@ export default function BulkAssetForm({
         description: `Successfully added ${assetsToAdd.length} assets`,
       });
       
-      form.reset({
-        month: new Date(),
-        assets: sources.map(source => ({
-          source,
-          amount: "",
-        }))
-      });
       onSuccess();
       onClose();
+      form.reset();
     } catch (error) {
       toast({
         title: "Error",
@@ -173,16 +174,7 @@ export default function BulkAssetForm({
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={(date) => {
-                          field.onChange(date);
-                          const popover = document.querySelector('[data-state="open"]');
-                          if (popover) {
-                            const closeButton = popover.querySelector('button[aria-label="Close"]');
-                            if (closeButton) {
-                              closeButton.click();
-                            }
-                          }
-                        }}
+                        onSelect={field.onChange}
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }
