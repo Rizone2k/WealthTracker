@@ -21,7 +21,7 @@ export default function AssetDistribution({ assets, onAddClick }: AssetDistribut
 
   // Find the latest month
   const latestMonth = months[0];
-  
+
   // State for selected month
   const [selectedMonth, setSelectedMonth] = useState(latestMonth);
 
@@ -46,7 +46,7 @@ export default function AssetDistribution({ assets, onAddClick }: AssetDistribut
 
   // Sort by amount descending
   const sortedEntries = Object.entries(assetGroups).sort((a, b) => b[1] - a[1]);
-  
+
   // Prepare chart data
   const chartData = {
     labels: sortedEntries.map(([source]) => source),
@@ -59,6 +59,9 @@ export default function AssetDistribution({ assets, onAddClick }: AssetDistribut
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div className="space-y-1">
           <CardTitle>Asset Distribution</CardTitle>
+          <p className="text-sm text-gray-500">
+            Total assets in {new Date(selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}: {formatCurrency(totalAmount)}
+          </p>
           <div className="flex items-center gap-2">
             <Select value={selectedMonth} onValueChange={setSelectedMonth}>
               <SelectTrigger className="w-[200px]">
