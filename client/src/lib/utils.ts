@@ -32,16 +32,16 @@ export function getRandomColor(): string {
 
 export function formatPercentage(value: number, total: number): string {
   if (total === 0) return "0%";
-  return `${((value / total) * 100).toFixed(1)}%`;
+  return `${Math.round((value / total) * 100)}%`;
 }
 
 export function formatDate(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
-
+  
   const now = new Date();
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
-
+  
   if (d.toDateString() === now.toDateString()) {
     return `Today, ${d.toLocaleTimeString("en-US", {
       hour: "numeric",
@@ -61,8 +61,4 @@ export function formatDate(date: Date | string): string {
       year: "numeric",
     });
   }
-}
-
-export function calculateTotalAmount(assets: Asset[]): number {
-  return assets.reduce((sum, asset) => sum + asset.amount, 0);
 }

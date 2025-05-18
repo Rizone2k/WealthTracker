@@ -12,7 +12,6 @@ import AssetForm from "@/components/AssetForm";
 import AssetTracking from "@/components/AssetTracking";
 import { Asset } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
-import { useQuery } from "@tanstack/react-query";
 
 export default function Dashboard() {
   const { toast } = useToast();
@@ -20,57 +19,50 @@ export default function Dashboard() {
   const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
 
   // Fetch assets data
-  const {
-    data: assets = [],
-    isLoading: assetsLoading,
-    error: assetsError,
-  } = useQuery<Asset[]>({
+  const { data: assets = [], isLoading: assetsLoading, error: assetsError } = useQuery<Asset[]>({
     queryKey: ["/api/assets"],
   });
-
+  
   // Fetch sources data
   const { data: sources = [], isLoading: sourcesLoading } = useQuery<string[]>({
     queryKey: ["/api/sources"],
   });
-
+  
   // Combined loading state
   const isLoading = assetsLoading || sourcesLoading;
-
+  
   // Create merged assets by combining amounts for the same source
   const mergedAssets = useMemo(() => {
     if (!assets.length) return [];
-
+    
     // Group by source
-    const groupedBySource = assets.reduce(
-      (acc, asset) => {
-        if (!acc[asset.source]) {
-          acc[asset.source] = {
-            id: -1 * (Object.keys(acc).length + 1), // Use negative numbers for merged assets
-            source: asset.source,
-            amount: 0,
-            description: asset.description || `Combined ${asset.source} assets`,
-            updatedAt: new Date(0),
-            _originalAssets: [], // Private field to store original assets
-          };
-        }
-
-        // Add amount
-        acc[asset.source].amount += asset.amount;
-
-        // Track the latest update
-        const assetDate = new Date(asset.updatedAt);
-        if (assetDate > new Date(acc[asset.source].updatedAt)) {
-          acc[asset.source].updatedAt = asset.updatedAt;
-        }
-
-        // Keep track of original assets
-        acc[asset.source]._originalAssets.push(asset);
-
-        return acc;
-      },
-      {} as Record<string, Asset & { _originalAssets: Asset[] }>,
-    );
-
+    const groupedBySource = assets.reduce((acc, asset) => {
+      if (!acc[asset.source]) {
+        acc[asset.source] = {
+          id: -1 * (Object.keys(acc).length + 1), // Use negative numbers for merged assets
+          source: asset.source,
+          amount: 0,
+          description: asset.description || `Combined ${asset.source} assets`,
+          updatedAt: new Date(0),
+          _originalAssets: [] // Private field to store original assets
+        };
+      }
+      
+      // Add amount
+      acc[asset.source].amount += asset.amount;
+      
+      // Track the latest update
+      const assetDate = new Date(asset.updatedAt);
+      if (assetDate > new Date(acc[asset.source].updatedAt)) {
+        acc[asset.source].updatedAt = asset.updatedAt;
+      }
+      
+      // Keep track of original assets
+      acc[asset.source]._originalAssets.push(asset);
+      
+      return acc;
+    }, {} as Record<string, Asset & { _originalAssets: Asset[] }>);
+    
     return Object.values(groupedBySource);
   }, [assets]);
 
@@ -85,7 +77,7 @@ export default function Dashboard() {
     queryClient.invalidateQueries({ queryKey: ["/api/assets"] });
     queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
   };
-
+  
   // Effect to refresh sources data when component mounts or when needed
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
@@ -121,10 +113,7 @@ export default function Dashboard() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className="bg-white p-6 rounded-xl shadow-sm animate-pulse"
-            >
+            <div key={i} className="bg-white p-6 rounded-xl shadow-sm animate-pulse">
               <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
               <div className="h-8 bg-gray-200 rounded mb-2"></div>
               <div className="h-4 bg-gray-200 rounded w-1/2"></div>
@@ -175,9 +164,9 @@ export default function Dashboard() {
         ) : (
           <>
             <div className="lg:col-span-2">
-              <AssetDistribution
-                assets={assets}
-                onAddClick={handleAddAssetClick}
+              <AssetDistribution 
+                assets={assets} 
+                onAddClick={handleAddAssetClick} 
               />
             </div>
             <RecentActivity assets={assets} />
@@ -196,8 +185,8 @@ export default function Dashboard() {
           </div>
         </div>
       ) : (
-        <AssetTable
-          assets={mergedAssets}
+        <AssetTable 
+          assets={mergedAssets} 
           onAssetChange={handleAssetChange}
           sources={sources}
         />

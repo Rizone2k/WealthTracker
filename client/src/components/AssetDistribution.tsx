@@ -42,7 +42,7 @@ export default function AssetDistribution({ assets, onAddClick }: AssetDistribut
   }, {} as Record<string, number>);
 
   // Calculate total of all assets
-  const totalAmount = calculateTotalAmount(selectedMonthAssets);
+  const totalAmount = Object.values(assetGroups).reduce((sum, amount) => sum + amount, 0);
 
   // Sort by amount descending
   const sortedEntries = Object.entries(assetGroups).sort((a, b) => b[1] - a[1]);
