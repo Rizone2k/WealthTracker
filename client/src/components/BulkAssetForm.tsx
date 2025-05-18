@@ -72,10 +72,10 @@ export default function BulkAssetForm({
       
       // Filter out assets with empty amounts and validate remaining
       const assetsToAdd = values.assets
-        .filter(asset => asset.amount.trim() !== "")
+        .filter(asset => asset.amount && asset.amount.trim() !== "")
         .map(asset => ({
           source: asset.source,
-          amount: parseFormattedCurrency(asset.amount),
+          amount: parseFormattedCurrency(asset.amount || "0"),
           month: values.month.toISOString(),
         }));
 
@@ -104,9 +104,15 @@ export default function BulkAssetForm({
         description: `Successfully added ${assetsToAdd.length} assets`,
       });
       
+      form.reset({
+        month: new Date(),
+        assets: sources.map(source => ({
+          source,
+          amount: "",
+        }))
+      });
       onSuccess();
       onClose();
-      form.reset();
     } catch (error) {
       toast({
         title: "Error",
