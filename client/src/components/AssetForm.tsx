@@ -229,7 +229,7 @@ export default function AssetForm({
                               </SelectItem>
                             ))}
                           {/* Always add "Other" option at the end */}
-                          <SelectItem key="other-option" value="Other">Other</SelectItem>
+                          {/* <SelectItem key="other-option" value="Other">Other</SelectItem> */}
                         </>
                       )}
                     </SelectContent>

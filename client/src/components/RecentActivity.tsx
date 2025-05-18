@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { Link } from "wouter";
 
 interface RecentActivityProps {
   assets: Asset[];
@@ -30,7 +31,7 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
       return asset.amount; // Positive value (deposit/addition)
     } else {
       // Last item is shown as withdrawal
-      return -asset.amount; // Negative value (withdrawal)
+      return asset.amount; // Negative value (withdrawal)
     }
   };
 
@@ -86,9 +87,9 @@ export default function RecentActivity({ assets }: RecentActivityProps) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>Recent Activity</CardTitle>
-        <Button variant="link" size="sm">
-          View All
-        </Button>
+        <Link to="/history">
+          <u className="text-blue-500">View All</u>
+        </Link>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">

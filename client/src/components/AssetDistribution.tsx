@@ -176,7 +176,7 @@ export default function AssetDistribution({
             <Button
               onClick={onAddClick}
               variant="outline"
-              className="w-full flex items-center justify-center gap-2"
+              className="w-full flex items-center bg-blue-300 justify-center gap-2"
             >
               <Plus className="h-4 w-4" />
               <span>Quick Add</span>

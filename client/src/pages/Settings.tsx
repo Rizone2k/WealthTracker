@@ -21,7 +21,7 @@ export default function Settings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Currency Settings</CardTitle>
+            <CardTitle>Currency Settings <b><u>{"(Coming Soon 💓)"}</u></b></CardTitle>
             <CardDescription>
               Configure how monetary values are displayed
             </CardDescription>
