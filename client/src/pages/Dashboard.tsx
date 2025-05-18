@@ -12,6 +12,7 @@ import AssetForm from "@/components/AssetForm";
 import AssetTracking from "@/components/AssetTracking";
 import { Asset } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
+import { XCircle } from "lucide-react";
 
 export default function Dashboard() {
   const { toast } = useToast();
