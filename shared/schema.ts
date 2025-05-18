@@ -1,4 +1,3 @@
-
 import { pgTable, text, serial, integer, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -28,24 +27,24 @@ export type Asset = typeof assets.$inferSelect;
 
 export const assetSourceSchema = z.enum([
   "Cash",
-  "Savings Account", 
+  "Savings Account",
   "Investment Fund",
   "Digital Wallet",
   "Stock Portfolio",
   "Real Estate",
   "Vehicle",
-  "Other"
+  "Other",
 ]);
 
 export type AssetSource = z.infer<typeof assetSourceSchema>;
 
 export const ASSET_SOURCE_COLORS: Record<AssetSource, string> = {
-  "Cash": "#3B82F6",
+  Cash: "#3B82F6",
   "Savings Account": "#10B981",
   "Investment Fund": "#6366F1",
-  "Digital Wallet": "#F59E0B", 
+  "Digital Wallet": "#F59E0B",
   "Stock Portfolio": "#8B5CF6",
   "Real Estate": "#EF4444",
-  "Vehicle": "#7C3AED",
-  "Other": "#EC4899"
+  Vehicle: "#7C3AED",
+  Other: "#EC4899",
 };
