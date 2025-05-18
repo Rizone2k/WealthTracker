@@ -41,8 +41,8 @@ interface BulkAssetFormProps {
 const formSchema = z.object({
   month: z.date(),
   assets: z.array(z.object({
-    source: z.string().min(1, "Source is required"),
-    amount: z.string().min(1, "Amount is required"),
+    source: z.string(),
+    amount: z.string().optional().default(""),
   }))
 });
 
@@ -66,17 +66,17 @@ export default function BulkAssetForm({
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
       
-      // Filter out assets with empty amounts
-      const assetsToAdd = data.assets
-        .filter(asset => asset.amount !== "")
+      // Filter out assets with empty amounts and validate remaining
+      const assetsToAdd = values.assets
+        .filter(asset => asset.amount.trim() !== "")
         .map(asset => ({
           source: asset.source,
           amount: parseFormattedCurrency(asset.amount),
-          month: data.month.toISOString(),
+          month: values.month.toISOString(),
         }));
 
       if (assetsToAdd.length === 0) {
@@ -174,7 +174,16 @@ export default function BulkAssetForm({
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(date) => {
+                          field.onChange(date);
+                          const popover = document.querySelector('[data-state="open"]');
+                          if (popover) {
+                            const closeButton = popover.querySelector('button[aria-label="Close"]');
+                            if (closeButton) {
+                              closeButton.click();
+                            }
+                          }
+                        }}
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }
