@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
+import { Plus, ListPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
@@ -9,6 +9,7 @@ import AssetDistribution from "@/components/AssetDistribution";
 import RecentActivity from "@/components/RecentActivity";
 import AssetTable from "@/components/AssetTable";
 import AssetForm from "@/components/AssetForm";
+import BulkAssetForm from "@/components/BulkAssetForm";
 import AssetTracking from "@/components/AssetTracking";
 import { Asset } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
+  const [isBulkAddModalOpen, setIsBulkAddModalOpen] = useState(false);
 
   // Fetch assets data
   const { data: assets = [], isLoading: assetsLoading, error: assetsError } = useQuery<Asset[]>({
@@ -101,13 +103,22 @@ export default function Dashboard() {
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-500">Manage and track your assets</p>
         </div>
-        <Button
-          onClick={handleAddAssetClick}
-          className="mt-4 md:mt-0 bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Add Asset</span>
-        </Button>
+        <div className="flex gap-2 mt-4 md:mt-0">
+          <Button
+            onClick={handleAddAssetClick}
+            className="bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Add Asset</span>
+          </Button>
+          <Button
+            onClick={() => setIsBulkAddModalOpen(true)}
+            className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
+          >
+            <ListPlus className="h-4 w-4" />
+            <span>Bulk Add</span>
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (
@@ -195,6 +206,13 @@ export default function Dashboard() {
       <AssetForm
         isOpen={isAddAssetModalOpen}
         onClose={() => setIsAddAssetModalOpen(false)}
+        onSuccess={handleAssetChange}
+        sources={sources}
+      />
+      
+      <BulkAssetForm
+        isOpen={isBulkAddModalOpen}
+        onClose={() => setIsBulkAddModalOpen(false)}
         onSuccess={handleAssetChange}
         sources={sources}
       />
