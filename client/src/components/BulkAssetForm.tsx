@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -65,12 +66,18 @@ export default function BulkAssetForm({
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
-
-      const assetsToAdd = values.assets
-        .filter(asset => asset.amount && asset.amount.trim() !== "");
+      
+      // Filter out assets with empty amounts
+      const assetsToAdd = data.assets
+        .filter(asset => asset.amount !== "")
+        .map(asset => ({
+          source: asset.source,
+          amount: parseFormattedCurrency(asset.amount),
+          month: data.month.toISOString(),
+        }));
 
       if (assetsToAdd.length === 0) {
         toast({
@@ -78,30 +85,25 @@ export default function BulkAssetForm({
           description: "Please enter at least one asset amount",
           variant: "destructive",
         });
-        setIsLoading(false);
         return;
       }
 
-      // Add assets one by one
-      for (const asset of assetsToAdd) {
-        const assetData = {
-          source: asset.source,
-          amount: parseFormattedCurrency(asset.amount),
-          month: values.month.toISOString(),
-        };
-
-        await apiRequest("/api/assets", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(assetData)
-        });
-      }
+      // Add all assets
+      await Promise.all(
+        assetsToAdd.map(asset =>
+          apiRequest("/api/assets", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(asset)
+          })
+        )
+      );
 
       toast({
         title: "Assets added",
         description: `Successfully added ${assetsToAdd.length} assets`,
       });
-
+      
       onSuccess();
       onClose();
       form.reset();
@@ -119,13 +121,13 @@ export default function BulkAssetForm({
   const handleAmountChange = (index: number, value: string) => {
     // Remove non-numeric characters
     let numericValue = value.replace(/\D/g, "");
-
+    
     // Format with thousand separators if there's a value
     if (numericValue) {
       const numValue = parseInt(numericValue, 10);
       numericValue = formatCurrency(numValue);
     }
-
+    
     const assets = form.getValues("assets");
     assets[index].amount = numericValue;
     form.setValue("assets", assets);
@@ -140,7 +142,7 @@ export default function BulkAssetForm({
             Add multiple assets for a specific month
           </DialogDescription>
         </DialogHeader>
-
+        
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
