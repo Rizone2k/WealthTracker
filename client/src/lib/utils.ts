@@ -32,7 +32,7 @@ export function getRandomColor(): string {
 
 export function formatPercentage(value: number, total: number): string {
   if (total === 0) return "0%";
-  return `${Math.round((value / total) * 100)}%`;
+  return `${((value / total) * 100).toFixed(1)}%`;
 }
 
 export function formatDate(date: Date | string): string {
@@ -61,10 +61,6 @@ export function formatDate(date: Date | string): string {
       year: "numeric",
     });
   }
-}
-
-export function formatPercentage(value: number, total: number): string {
-  return `${((value / total) * 100).toFixed(1)}%`;
 }
 
 export function calculateTotalAmount(assets: Asset[]): number {
