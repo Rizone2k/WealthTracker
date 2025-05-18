@@ -36,6 +36,14 @@ export function formatPercentage(value: number, total: number): string {
   return `${Math.round((value / total) * 100)}%`;
 }
 
+export function getAssetsForMonth(assets: Asset[], targetMonth?: string) {
+  if (!targetMonth) return assets;
+  return assets.filter(asset => {
+    const assetMonth = new Date(asset.month).toISOString().slice(0, 7);
+    return assetMonth === targetMonth;
+  });
+}
+
 export function formatDate(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   

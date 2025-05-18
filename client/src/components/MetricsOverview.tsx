@@ -1,12 +1,23 @@
 import { Asset } from "@shared/schema";
 import { Banknote, Wallet, Clock } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate, getAssetsForMonth } from "@/lib/utils";
+
 interface MetricsOverviewProps {
   assets: Asset[];
 }
+
 export default function MetricsOverview({ assets }: MetricsOverviewProps) {
+  // Get latest month
+  const months = [...new Set(assets.map(asset => {
+    return new Date(asset.month).toISOString().slice(0, 7);
+  }))].sort().reverse();
+  const latestMonth = months[0];
+
+  // Filter assets for latest month
+  const monthlyAssets = getAssetsForMonth(assets, latestMonth);
+
   // Calculate basic metrics
-  const totalAmount = assets.reduce((sum, asset) => sum + asset.amount, 0);
+  const totalAmount = monthlyAssets.reduce((sum, asset) => sum + asset.amount, 0);
   const uniqueSources = new Set(assets.map(asset => asset.source)).size;
   const lastUpdatedAsset = assets.length > 0
     ? assets.reduce((latest, asset) => {
