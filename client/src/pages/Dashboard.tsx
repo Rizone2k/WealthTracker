@@ -37,8 +37,11 @@ export default function Dashboard() {
     return date.toISOString().slice(0, 7); // YYYY-MM format
   }))].sort().reverse();
 
-  // Default to latest month
-  const [selectedMonth, setSelectedMonth] = useState(months[0] || '');
+  // Default to current month in YYYY-MM format
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
 
   // Update selected month when assets change
   useEffect(() => {
