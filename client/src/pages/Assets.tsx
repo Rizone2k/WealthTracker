@@ -149,30 +149,36 @@ export default function Assets() {
     const source = sources[index];
     
     try {
-      const response = await apiRequest<Response>(`/api/sources/${encodeURIComponent(source)}`, {
+      const response = await apiRequest(`/api/sources/${encodeURIComponent(source)}`, {
         method: "DELETE",
       });
       
       if (response.status === 400) {
+        const errorData = await response.json();
         toast({
           title: "Error",
-          description: "Cannot delete source that is in use",
+          description: errorData.message || "Cannot delete source that is in use",
           variant: "destructive",
         });
         return;
       }
-
-      queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
+      
+      // Refresh both sources and assets data
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["/api/sources"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/assets"] })
+      ]);
       
       toast({
-        title: "Success",
-        description: "Source deleted successfully",
+        title: "Success", 
+        description: "Source deleted successfully"
       });
     } catch (error) {
+      console.error('Delete error:', error);
       toast({
         title: "Error",
         description: "Failed to delete source",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
