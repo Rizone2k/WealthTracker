@@ -26,25 +26,31 @@ export type UpdateAsset = z.infer<typeof updateAssetSchema>;
 export type Asset = typeof assets.$inferSelect;
 
 export const assetSourceSchema = z.enum([
+  "Cryptocurrency",
+  "Savings Account Viettel Money",
+  "VietcomBank",
+  "Tui Than Tai",
   "Cash",
-  "Savings Account",
-  "Investment Fund",
-  "Digital Wallet",
-  "Stock Portfolio",
-  "Real Estate",
-  "Vehicle",
-  "Other",
+  "Loan",
+  "MoMo",
+  "VietinBank",
+  "ZaloPay",
+  "ViettelPay",
+  "Stock Investment",
 ]);
 
 export type AssetSource = z.infer<typeof assetSourceSchema>;
 
 export const ASSET_SOURCE_COLORS: Record<AssetSource, string> = {
-  Cash: "#3B82F6",
-  "Savings Account": "#10B981",
-  "Investment Fund": "#6366F1",
-  "Digital Wallet": "#F59E0B",
-  "Stock Portfolio": "#8B5CF6",
-  "Real Estate": "#EF4444",
-  Vehicle: "#7C3AED",
-  Other: "#EC4899",
+  Cryptocurrency: "#6366F1", // Investment Fund
+  "Savings Account Viettel Money": "#10B981", // Savings Account
+  VietcomBank: "#10B981", // Savings Account
+  "Tui Than Tai": "#10B981", // Savings Account
+  Cash: "#3B82F6", // Cash
+  Loan: "#EC4899", // Other
+  MoMo: "#F59E0B", // Digital Wallet
+  VietinBank: "#10B981", // Savings Account
+  ZaloPay: "#F59E0B", // Digital Wallet
+  ViettelPay: "#F59E0B", // Digital Wallet
+  "Stock Investment": "#8B5CF6", // Stock Portfolio
 };
