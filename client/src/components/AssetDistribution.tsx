@@ -10,11 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface AssetDistributionProps {
   assets: Asset[];
   onAddClick: () => void;
-  selectedMonth: string;
-  onMonthChange: (month: string) => void;
 }
 
-export default function AssetDistribution({ assets, onAddClick, selectedMonth, onMonthChange }: AssetDistributionProps) {
+export default function AssetDistribution({ assets, onAddClick }: AssetDistributionProps) {
   // Get all unique months from assets
   const months = [...new Set(assets.map(asset => {
     const date = new Date(asset.month);
@@ -24,7 +22,8 @@ export default function AssetDistribution({ assets, onAddClick, selectedMonth, o
   // Find the latest month
   const latestMonth = months[0];
   
-  // Use props instead of local state
+  // State for selected month
+  const [selectedMonth, setSelectedMonth] = useState(latestMonth);
 
   // Filter assets for selected month
   const selectedMonthAssets = assets.filter(asset => {
@@ -61,7 +60,7 @@ export default function AssetDistribution({ assets, onAddClick, selectedMonth, o
         <div className="space-y-1">
           <CardTitle>Asset Distribution</CardTitle>
           <div className="flex items-center gap-2">
-            <Select value={selectedMonth} onValueChange={onMonthChange}>
+            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Select month" />
               </SelectTrigger>

@@ -12,7 +12,6 @@ import AssetForm from "@/components/AssetForm";
 import AssetTracking from "@/components/AssetTracking";
 import { Asset } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
-import { XCircle } from "lucide-react";
 
 export default function Dashboard() {
   const { toast } = useToast();
@@ -23,38 +22,19 @@ export default function Dashboard() {
   const { data: assets = [], isLoading: assetsLoading, error: assetsError } = useQuery<Asset[]>({
     queryKey: ["/api/assets"],
   });
-
+  
   // Fetch sources data
   const { data: sources = [], isLoading: sourcesLoading } = useQuery<string[]>({
     queryKey: ["/api/sources"],
   });
-
+  
   // Combined loading state
   const isLoading = assetsLoading || sourcesLoading;
-
-  // Get all unique months
-  const months = [...new Set(assets.map(asset => {
-    const date = new Date(asset.month);
-    return date.toISOString().slice(0, 7); // YYYY-MM format
-  }))].sort().reverse();
-
-  // Default to current month in YYYY-MM format
-  const [selectedMonth, setSelectedMonth] = useState(() => {
-    const now = new Date();
-    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-  });
-
-  // Update selected month when assets change
-  useEffect(() => {
-    if (months.length > 0 && !months.includes(selectedMonth)) {
-      setSelectedMonth(months[0]);
-    }
-  }, [assets]);
-
+  
   // Create merged assets by combining amounts for the same source
   const mergedAssets = useMemo(() => {
     if (!assets.length) return [];
-
+    
     // Group by source
     const groupedBySource = assets.reduce((acc, asset) => {
       if (!acc[asset.source]) {
@@ -67,22 +47,22 @@ export default function Dashboard() {
           _originalAssets: [] // Private field to store original assets
         };
       }
-
+      
       // Add amount
       acc[asset.source].amount += asset.amount;
-
+      
       // Track the latest update
       const assetDate = new Date(asset.updatedAt);
       if (assetDate > new Date(acc[asset.source].updatedAt)) {
         acc[asset.source].updatedAt = asset.updatedAt;
       }
-
+      
       // Keep track of original assets
       acc[asset.source]._originalAssets.push(asset);
-
+      
       return acc;
     }, {} as Record<string, Asset & { _originalAssets: Asset[] }>);
-
+    
     return Object.values(groupedBySource);
   }, [assets]);
 
@@ -97,7 +77,7 @@ export default function Dashboard() {
     queryClient.invalidateQueries({ queryKey: ["/api/assets"] });
     queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
   };
-
+  
   // Effect to refresh sources data when component mounts or when needed
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
@@ -141,7 +121,7 @@ export default function Dashboard() {
           ))}
         </div>
       ) : (
-        <MetricsOverview assets={assets} selectedMonth={selectedMonth} />
+        <MetricsOverview assets={assets} />
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -186,53 +166,9 @@ export default function Dashboard() {
             <div className="lg:col-span-2">
               <AssetDistribution 
                 assets={assets} 
-                onAddClick={handleAddAssetClick}
-                selectedMonth={selectedMonth}
-                onMonthChange={setSelectedMonth}
+                onAddClick={handleAddAssetClick} 
               />
             </div>
-            <RecentActivity assets={assets} />
-          </>
-        )}
-      </div>
-        {isLoading ? (
-          <>
-            <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 animate-pulse">
-              <div className="h-5 bg-gray-200 rounded w-1/4 mb-6"></div>
-              <div className="flex flex-col md:flex-row">
-                <div className="w-full md:w-1/2 mb-6 md:mb-0 flex justify-center">
-                  <div className="w-64 h-64 bg-gray-200 rounded-full"></div>
-                </div>
-                <div className="w-full md:w-1/2">
-                  <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
-                  {[...Array(4)].map((_, i) => (
-                    <div key={i} className="flex items-center mb-2">
-                      <div className="w-3 h-3 rounded-full bg-gray-200 mr-3"></div>
-                      <div className="h-4 bg-gray-200 rounded w-1/2 flex-1"></div>
-                      <div className="h-4 bg-gray-200 rounded w-1/6"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
-              <div className="h-5 bg-gray-200 rounded w-1/3 mb-6"></div>
-              <div className="space-y-4">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="flex items-start">
-                    <div className="bg-gray-200 rounded-full p-2 mr-3 w-8 h-8"></div>
-                    <div className="flex-1">
-                      <div className="h-4 bg-gray-200 rounded w-2/3 mb-1"></div>
-                      <div className="h-3 bg-gray-200 rounded w-1/3"></div>
-                    </div>
-                    <div className="h-4 bg-gray-200 rounded w-1/6"></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
             <RecentActivity assets={assets} />
           </>
         )}
