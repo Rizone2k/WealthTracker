@@ -256,7 +256,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (!deleted) {
         return res.status(400).json({ 
-          message: "Source could not be deleted. Standard sources cannot be deleted." 
+          message: "Failed to delete source" 
         });
       }
       

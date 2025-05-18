@@ -236,30 +236,25 @@ export class FileStorage implements IStorage {
   }
 
   async deleteSource(source: string): Promise<boolean> {
-    // Check if any assets are using this source
-    const assetsUsingSource = Array.from(this.assets.values()).some(
-      asset => asset.source === source
-    );
+    // Delete source and all associated assets
+    const assetsToDelete = Array.from(this.assets.values())
+      .filter(asset => asset.source === source);
+      
+    // Delete all assets with this source
+    assetsToDelete.forEach(asset => {
+      this.assets.delete(asset.id);
+    });
     
-    if (assetsUsingSource) {
-      // Cannot delete sources that are in use
-      return false;
-    }
+    // Delete the source itself
+    let result = this.customSources.delete(source);
     
-    let result = false;
-    // Delete from custom sources
-    if (this.customSources.has(source)) {
-      result = this.customSources.delete(source);
-    } else {
-      // For built-in sources, we add to a "deleted" list
-      // (this is a workaround since we can't remove from the enum)
+    // For built-in sources, mark as deleted
+    if (!result) {
       this.customSources.add(`__deleted_${source}`);
       result = true;
     }
     
-    if (result) {
-      this.saveData();
-    }
+    this.saveData();
     return result;
   }
 }
