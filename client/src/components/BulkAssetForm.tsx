@@ -41,8 +41,8 @@ interface BulkAssetFormProps {
 const formSchema = z.object({
   month: z.date(),
   assets: z.array(z.object({
-    source: z.string(),
-    amount: z.string(),
+    source: z.string().min(1, "Source is required"),
+    amount: z.string().min(1, "Amount is required"),
   }))
 });
 
@@ -174,16 +174,7 @@ export default function BulkAssetForm({
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={(date) => {
-                          field.onChange(date);
-                          const popover = document.querySelector('[data-state="open"]');
-                          if (popover) {
-                            const closeButton = popover.querySelector('button[aria-label="Close"]');
-                            if (closeButton) {
-                              closeButton.click();
-                            }
-                          }
-                        }}
+                        onSelect={field.onChange}
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }
