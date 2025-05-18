@@ -236,6 +236,16 @@ export class FileStorage implements IStorage {
   }
 
   async deleteSource(source: string): Promise<boolean> {
+    // Check if this is the last source with assets
+    const sources = await this.getAllSources();
+    const sourcesWithAssets = sources.filter(s => 
+      Array.from(this.assets.values()).some(asset => asset.source === s)
+    );
+    
+    if (sourcesWithAssets.length === 1 && sourcesWithAssets[0] === source) {
+      return false;
+    }
+    
     // Delete source and all associated assets
     const assetsToDelete = Array.from(this.assets.values())
       .filter(asset => asset.source === source);
