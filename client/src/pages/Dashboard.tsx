@@ -18,7 +18,12 @@ export default function Dashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
-  
+
+  // Fetch assets data
+  const { data: assets = [], isLoading: assetsLoading, error: assetsError } = useQuery<Asset[]>({
+    queryKey: ["/api/assets"],
+  });
+
   // Get all unique months and set initial selected month
   const months = useMemo(() => {
     return [...new Set(assets.map(asset => {
@@ -27,9 +32,6 @@ export default function Dashboard() {
   }, [assets]);
   
   const [selectedMonth, setSelectedMonth] = useState(months[0] || '');
-
-  // Fetch assets data
-  const { data: assets = [], isLoading: assetsLoading, error: assetsError } = useQuery<Asset[]>({
     queryKey: ["/api/assets"],
   });
   
