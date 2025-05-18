@@ -42,9 +42,12 @@ const formSchema = z.object({
   month: z.date(),
   assets: z.array(z.object({
     source: z.string(),
-    amount: z.string().optional(),
+    amount: z.string().optional().default(""),
   }))
-});
+}).refine(
+  data => data.assets.some(asset => asset.amount && asset.amount.trim() !== ""),
+  { message: "At least one asset amount is required" }
+);
 
 export default function BulkAssetForm({
   isOpen,
@@ -74,19 +77,9 @@ export default function BulkAssetForm({
         .filter(asset => asset.amount && asset.amount.trim() !== "")
         .map(asset => ({
           source: asset.source,
-          amount: parseFormattedCurrency(asset.amount || "0"),
+          amount: parseFormattedCurrency(asset.amount),
           month: values.month.toISOString(),
         }));
-
-      if (assetsToAdd.length === 0) {
-        toast({
-          title: "No assets to add",
-          description: "Please enter at least one asset amount",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
 
       // Add all assets
       await Promise.all(
