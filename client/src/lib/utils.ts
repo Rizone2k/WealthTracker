@@ -1,3 +1,4 @@
+
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -47,17 +48,6 @@ export function formatDate(date: Date | string): string {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
-
-export function getAssetsForMonth(assets: Asset[], targetMonth?: string) {
-  // If no month specified, return all assets
-  if (!targetMonth) return assets;
-  
-  return assets.filter(asset => {
-    const assetMonth = new Date(asset.month).toISOString().slice(0, 7);
-    return assetMonth === targetMonth;
-  });
-}
-
     })}`;
   } else if (d.toDateString() === yesterday.toDateString()) {
     return `Yesterday, ${d.toLocaleTimeString("en-US", {
