@@ -33,7 +33,7 @@ export default function MetricsOverview({ assets }: MetricsOverviewProps) {
   });
 
   // Calculate totals for selected month
-  const totalAmount = monthlyAssets.reduce((sum, asset) => sum + asset.amount, 0);
+  const totalAmount = calculateTotalAmount(monthlyAssets);
   const uniqueSources = new Set(monthlyAssets.map(asset => asset.source)).size;
 
   // Get last updated asset

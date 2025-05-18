@@ -37,11 +37,11 @@ export function formatPercentage(value: number, total: number): string {
 
 export function formatDate(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
-  
+
   const now = new Date();
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
-  
+
   if (d.toDateString() === now.toDateString()) {
     return `Today, ${d.toLocaleTimeString("en-US", {
       hour: "numeric",
@@ -61,4 +61,12 @@ export function formatDate(date: Date | string): string {
       year: "numeric",
     });
   }
+}
+
+export function formatPercentage(value: number, total: number): string {
+  return `${((value / total) * 100).toFixed(1)}%`;
+}
+
+export function calculateTotalAmount(assets: Asset[]): number {
+  return assets.reduce((sum, asset) => sum + asset.amount, 0);
 }
