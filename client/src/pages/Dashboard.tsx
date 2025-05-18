@@ -12,11 +12,6 @@ import AssetForm from "@/components/AssetForm";
 import AssetTracking from "@/components/AssetTracking";
 import { Asset } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooksz/use-toast";
-import Layout from "@/components/Layout";
-import MetricsOverview from "@/components/MetricsOverview";
-import AssetDistribution from "@/components/AssetDistribution";
-import ActivityHistory from "@/components/ActivityHistory";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Dashboard() {
