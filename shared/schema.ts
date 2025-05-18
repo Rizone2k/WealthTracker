@@ -26,16 +26,24 @@ export type InsertAsset = z.infer<typeof insertAssetSchema>;
 export type UpdateAsset = z.infer<typeof updateAssetSchema>;
 export type Asset = typeof assets.$inferSelect;
 
-// Remove the enum restriction, allow any string for source
-export const assetSourceSchema = z.string().min(1, "Source name is required");
+export const assetSourceSchema = z.enum([
+  "Cash",
+  "Savings Account", 
+  "Investment Fund",
+  "Digital Wallet",
+  "Stock Portfolio",
+  "Real Estate",
+  "Vehicle",
+  "Other"
+]);
+
 export type AssetSource = z.infer<typeof assetSourceSchema>;
 
-// Default color mapping for common sources
-export const ASSET_SOURCE_COLORS: Record<string, string> = {
-  "Cryptocurrency": "#3B82F6",
-  "Savings Account": "#10B981", 
+export const ASSET_SOURCE_COLORS: Record<AssetSource, string> = {
+  "Cash": "#3B82F6",
+  "Savings Account": "#10B981",
   "Investment Fund": "#6366F1",
-  "Digital Wallet": "#F59E0B",
+  "Digital Wallet": "#F59E0B", 
   "Stock Portfolio": "#8B5CF6",
   "Real Estate": "#EF4444",
   "Vehicle": "#7C3AED",

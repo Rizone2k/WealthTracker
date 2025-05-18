@@ -19,17 +19,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/assets/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-
+      
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid asset ID" });
       }
-
+      
       const asset = await storage.getAsset(id);
-
+      
       if (!asset) {
         return res.status(404).json({ message: "Asset not found" });
       }
-
+      
       res.json(asset);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch asset" });
@@ -56,18 +56,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/assets/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-
+      
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid asset ID" });
       }
-
+      
       const updateData = updateAssetSchema.parse(req.body);
       const updatedAsset = await storage.updateAsset(id, updateData);
-
+      
       if (!updatedAsset) {
         return res.status(404).json({ message: "Asset not found" });
       }
-
+      
       res.json(updatedAsset);
     } catch (error) {
       if (error instanceof ZodError) {
@@ -77,25 +77,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to update asset" });
     }
   });
-
+  
   // PATCH endpoint for assets (supporting partial updates)
   app.patch("/api/assets/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-
+      
       // Handle special case for merged assets (negative IDs)
       if (id < 0) {
         // This is a virtual merged asset - we need to find all assets with the same source
         // and update them with the new amount proportionally
-
+        
         try {
           // Get all assets
           const allAssets = await storage.getAllAssets();
-
+          
           // Find assets with the matching source based on the merged asset ID
           // For now, our frontend uses negative IDs where -1 is the first source, -2 is the second, etc.
           // So we need to get the proper source name
-
+          
           // Group assets by source 
           const sourceGroups = allAssets.reduce((groups: Record<string, Asset[]>, asset: Asset) => {
             if (!groups[asset.source]) {
@@ -104,30 +104,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
             groups[asset.source].push(asset);
             return groups;
           }, {});
-
+          
           // Get unique sources in exactly the same order they're processed in the frontend
           // This is critical as the frontend assigns negative IDs based on iteration order
           const uniqueSources = Object.keys(sourceGroups);
-
+          
           // Now we can get the correct source based on the negative ID
           // -1 means first source, -2 means second source, etc.
           const sourceIndex = Math.abs(id) - 1;
-
+          
           if (sourceIndex >= 0 && sourceIndex < uniqueSources.length) {
             const source = uniqueSources[sourceIndex];
-
+            
             // Get the assets with this source
             const assetsWithSource = allAssets.filter(asset => asset.source === source);
-
+            
             // If there's an amount change, distribute it proportionally
             if (req.body.amount !== undefined) {
               const newTotalAmount = req.body.amount;
               const currentTotalAmount = assetsWithSource.reduce((sum: number, asset: Asset) => sum + asset.amount, 0);
-
+              
               // Only update if the amount changed
               if (newTotalAmount !== currentTotalAmount) {
                 const ratio = newTotalAmount / currentTotalAmount;
-
+                
                 // Update each asset with the new proportional amount
                 const updatePromises = assetsWithSource.map(async (asset) => {
                   const newAmount = Math.round(asset.amount * ratio);
@@ -137,7 +137,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                     description: req.body.description !== undefined ? req.body.description : asset.description
                   });
                 });
-
+                
                 await Promise.all(updatePromises);
               } else if (req.body.description !== undefined) {
                 // If only description changed, update all assets with the new description
@@ -148,11 +148,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
                     description: req.body.description 
                   });
                 });
-
+                
                 await Promise.all(updatePromises);
               }
             }
-
+            
             return res.status(200).json({ 
               message: `Updated ${assetsWithSource.length} assets for source "${source}"`,
               sourceCount: assetsWithSource.length,
@@ -166,20 +166,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(500).json({ message: "Failed to update merged assets" });
         }
       }
-
+      
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid asset ID" });
       }
-
+      
       // We'll use a partial schema for PATCH
       // This isn't strictly necessary since we're not validating in this route
       const updateData = req.body;
       const updatedAsset = await storage.updateAsset(id, updateData);
-
+      
       if (!updatedAsset) {
         return res.status(404).json({ message: "Asset not found" });
       }
-
+      
       res.json(updatedAsset);
     } catch (error) {
       res.status(500).json({ message: "Failed to update asset" });
@@ -189,17 +189,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/assets/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-
+      
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid asset ID" });
       }
-
+      
       const deleted = await storage.deleteAsset(id);
-
+      
       if (!deleted) {
         return res.status(404).json({ message: "Asset not found" });
       }
-
+      
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete asset" });
@@ -210,9 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/sources", async (req, res) => {
     try {
       const sources = await storage.getAllSources();
-      // Filter out special prefixed sources
-      const filteredSources = sources.filter(source => !source.startsWith('__'));
-      res.json(filteredSources);
+      res.json(sources);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch sources" });
     }
@@ -225,7 +223,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!name || typeof name !== 'string' || name.trim() === '') {
         return res.status(400).json({ message: "Source name is required" });
       }
-
+      
       const result = await storage.addSource(name);
       res.status(201).json(result);
     } catch (error) {
@@ -241,9 +239,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!name || typeof name !== 'string' || name.trim() === '') {
         return res.status(400).json({ message: "New source name is required" });
       }
-
+      
       // All sources are editable now
-
+      
       const result = await storage.updateSource(oldSource, name);
       res.json(result);
     } catch (error) {
@@ -255,13 +253,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const source = req.params.source;
       const deleted = await storage.deleteSource(source);
-
+      
       if (!deleted) {
         return res.status(400).json({ 
           message: "Failed to delete source" 
         });
       }
-
+      
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete source" });

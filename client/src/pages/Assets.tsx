@@ -284,10 +284,10 @@ export default function Assets() {
                     </TableCell>
                   </TableRow>
                 ))}
-                {sources.filter(source => !source.startsWith('__')).length === 0 && (
+                {sources.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={2} className="text-center py-6 text-gray-500">
-                      No sources added yet.
+                      No custom sources added yet.
                     </TableCell>
                   </TableRow>
                 )}
