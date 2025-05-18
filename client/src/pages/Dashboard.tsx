@@ -22,15 +22,15 @@ export default function Dashboard() {
   const { data: assets = [], isLoading: assetsLoading, error: assetsError } = useQuery<Asset[]>({
     queryKey: ["/api/assets"],
   });
-  
+
   // Fetch sources data
   const { data: sources = [], isLoading: sourcesLoading } = useQuery<string[]>({
     queryKey: ["/api/sources"],
   });
-  
+
   // Combined loading state
   const isLoading = assetsLoading || sourcesLoading;
-  
+
   // Get all unique months
   const months = [...new Set(assets.map(asset => {
     const date = new Date(asset.month);
@@ -53,7 +53,7 @@ export default function Dashboard() {
   // Create merged assets by combining amounts for the same source
   const mergedAssets = useMemo(() => {
     if (!assets.length) return [];
-    
+
     // Group by source
     const groupedBySource = assets.reduce((acc, asset) => {
       if (!acc[asset.source]) {
@@ -66,22 +66,22 @@ export default function Dashboard() {
           _originalAssets: [] // Private field to store original assets
         };
       }
-      
+
       // Add amount
       acc[asset.source].amount += asset.amount;
-      
+
       // Track the latest update
       const assetDate = new Date(asset.updatedAt);
       if (assetDate > new Date(acc[asset.source].updatedAt)) {
         acc[asset.source].updatedAt = asset.updatedAt;
       }
-      
+
       // Keep track of original assets
       acc[asset.source]._originalAssets.push(asset);
-      
+
       return acc;
     }, {} as Record<string, Asset & { _originalAssets: Asset[] }>);
-    
+
     return Object.values(groupedBySource);
   }, [assets]);
 
@@ -96,7 +96,7 @@ export default function Dashboard() {
     queryClient.invalidateQueries({ queryKey: ["/api/assets"] });
     queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
   };
-  
+
   // Effect to refresh sources data when component mounts or when needed
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["/api/sources"] });
