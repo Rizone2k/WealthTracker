@@ -4,17 +4,12 @@ import { formatCurrency, formatDate, getAssetsForMonth } from "@/lib/utils";
 
 interface MetricsOverviewProps {
   assets: Asset[];
+  selectedMonth: string;
 }
 
-export default function MetricsOverview({ assets }: MetricsOverviewProps) {
-  // Get latest month
-  const months = [...new Set(assets.map(asset => {
-    return new Date(asset.month).toISOString().slice(0, 7);
-  }))].sort().reverse();
-  const latestMonth = months[0];
-
-  // Filter assets for latest month
-  const monthlyAssets = getAssetsForMonth(assets, latestMonth);
+export default function MetricsOverview({ assets, selectedMonth }: MetricsOverviewProps) {
+  // Filter assets for selected month
+  const monthlyAssets = getAssetsForMonth(assets, selectedMonth);
 
   // Calculate basic metrics
   const totalAmount = monthlyAssets.reduce((sum, asset) => sum + asset.amount, 0);

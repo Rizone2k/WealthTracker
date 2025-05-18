@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
 import MetricsOverview from "@/components/MetricsOverview";
@@ -17,6 +18,15 @@ export default function Dashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
+  
+  // Get all unique months and set initial selected month
+  const months = useMemo(() => {
+    return [...new Set(assets.map(asset => {
+      return new Date(asset.month).toISOString().slice(0, 7);
+    }))].sort().reverse();
+  }, [assets]);
+  
+  const [selectedMonth, setSelectedMonth] = useState(months[0] || '');
 
   // Fetch assets data
   const { data: assets = [], isLoading: assetsLoading, error: assetsError } = useQuery<Asset[]>({
@@ -99,7 +109,24 @@ export default function Dashboard() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-500">Manage and track your assets</p>
+          <div className="flex items-center gap-4 mt-2">
+            <p className="text-gray-500">Manage and track your assets</p>
+            <Select 
+              value={selectedMonth} 
+              onValueChange={setSelectedMonth}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select month" />
+              </SelectTrigger>
+              <SelectContent>
+                {months.map((month) => (
+                  <SelectItem key={month} value={month}>
+                    {new Date(month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <Button
           onClick={handleAddAssetClick}
@@ -121,7 +148,7 @@ export default function Dashboard() {
           ))}
         </div>
       ) : (
-        <MetricsOverview assets={assets} />
+        <MetricsOverview assets={assets} selectedMonth={selectedMonth} />
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
