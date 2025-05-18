@@ -18,20 +18,20 @@ export default function Dashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
-  
-  // Get all unique months and set initial selected month
-  const months = useMemo(() => {
-    return [...new Set(assets.map(asset => {
-      return new Date(asset.month).toISOString().slice(0, 7);
-    }))].sort().reverse();
-  }, [assets]);
-  
-  const [selectedMonth, setSelectedMonth] = useState(months[0] || '');
 
   // Fetch assets data
   const { data: assets = [], isLoading: assetsLoading, error: assetsError } = useQuery<Asset[]>({
     queryKey: ["/api/assets"],
   });
+  
+  // Get all unique months and set initial selected month
+  const months = useMemo(() => {
+    return Array.from(new Set(assets.map(asset => {
+      return new Date(asset.month).toISOString().slice(0, 7);
+    }))).sort().reverse();
+  }, [assets]);
+  
+  const [selectedMonth, setSelectedMonth] = useState(months[0] || '');
   
   // Fetch sources data
   const { data: sources = [], isLoading: sourcesLoading } = useQuery<string[]>({
